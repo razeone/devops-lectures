@@ -1,0 +1,648 @@
+---
+title: "Linux101"
+author: "Jorge Raze"
+date: "5 de septiembre de 2017"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
+# Inducción a BEEVA
+
+# Introduction
+
+## DevOps
+
+DevOps es un acrónimo inglés de development (desarrollo) y operations (operaciones), que se refiere a una cultura o movimiento centrado en la comunicación, colaboración e integración entre desarrolladores de software y los profesionales en las tecnologías de la información (IT). Automatiza el proceso de entrega del software y los cambios en la infraestructura. Su objetivo es ayudar a crear un entorno donde la construcción, prueba y lanzamiento de un software pueda ser más rápido y con mayor fiabilidad.
+
+Las empresas con entregas (releases) muy frecuentes podrían requerir conocimientos de DevOps. Flickr desarrolló un sistema DevOps para cumplir un requisito de negocio de diez despliegues al día. A este tipo de sistemas se les conoce como despliegue continuo (continuous deployment) o entrega continua (continuous delivery), y suelen estar asociados a metodologías lean startup. Grupos de trabajo, asociaciones profesionales y blogs usan el término desde 2009.
+
+[Fuente](https://es.wikipedia.org/wiki/DevOps)
+
+## DevOps
+
+![DevOps](img/ven_dev.png)
+
+## Mapa
+
+![DevOps](img/mapa_dev.png)
+
+
+# Introduction to Linux Server
+
+## Linux
+
+GNU/Linux, es el término empleado para referirse a la combinación del sistema operativo GNU, desarrollado por la FSF, y el núcleo(kernel) Linux, desarrollado por Linus Torvalds y la Linux Foundation. Su desarrollo es uno de los ejemplos más prominentes de software libre; todo su código fuente puede ser utilizado, modificado y redistribuido libremente por cualquiera bajo los términos de la GPL (Licencia Pública General de GNU) y otra serie de licencias libres.
+
+[Fuente](https://es.wikipedia.org/wiki/GNU/Linux)
+
+## Components of a Linux System
+
+* The Linux Kernel
+* The GNU utilities
+* A graphical desktop environment (not always)
+* Application software
+
+## Kernel responsabilities
+
+* System memory management
+* Software program management
+* Hardware management
+* Filesystem management
+
+
+## The Linux system memory map
+
+![Linux memory](img/memory.png)
+
+## Filesystems
+
+* ext
+* ext2
+* ext3
+* ext4
+* NFS
+* NTFS
+
+## Core GNU Utilities
+
+* Handling files
+* Manipulating text
+* Managing processes
+
+## The Shell
+
+```
+#
+$
+```
+
+* zsh
+* korn
+* tcsh
+* ash
+
+## On the Desktop
+
+* The X Window system
+* KDE
+* GNOME
+* Unity
+* LXDE
+* XFCE
+
+## Distributions
+
+* Debian/Ubuntu/Mint
+* Red Hat/Fedora/CentOS
+* SUSE/OpenSUSE
+* Slackware
+* Arch
+* Knopix
+* Gentoo
+
+## Back to the Shell
+
+Linux displays by default a console terminal if the graphical interface is not set in the boot sequence.
+
+You can access to the virtual consoles by using `Ctrl+Alt+F1` to `F7`
+
+TTY: Short for TeleTYpewriter
+
+## Consoles
+
+```
+setterm --inversescreen on
+```
+
+* Final Term
+* Eterm
+* Konsole
+* UXTerm
+* xterm
+* Terminator
+
+
+# Basic Shell Commands
+
+## Starting the Shell
+
+Prompt
+
+```
+raze@linuxserver01:~$
+root@linuxserver01:~#
+```
+
+## Man pages
+
+```
+man command
+```
+
+* Name
+* Synopsis
+* Configuration
+* Description
+* Options
+* Exit Status
+* Return Value
+* Errors
+* Environment
+* Files
+* Versions
+
+## Navigating the filesystem
+
+```
+cd /home
+cd
+cd ~
+pwd
+cd /var/log
+cd ../../
+```
+
+## Common Linux Directory Names
+
+```
+/       Root of the virtual directory, no files
+/bin    Binary directory, many GNU utilities stored
+/boot   Boot directory, boot files
+/dev    device directory, where Linux creates device nodes
+/etc    system configuration files directory
+/home   Home directory, where user's dirs are created
+/lib    Library directory, system and application library files
+/media  media directory, a common place for mount points (removable media)
+/mnt    mount directory, another common place for mount points
+/opt    optional directory, often used to store third party software packages
+/proc   process dir, current hardware and process information
+/root   root home directory
+/sbin   system binary
+/run    run dir, runtime data
+/srv    service dir, where local services store their files
+/sys    system dir, system hardware information files are stored
+/tmp    temporary dir, where temporary work files can be created
+/usr    user binary directory
+/var    variable directory, files that change frequently, logs for example
+```
+
+## Listing files
+
+```
+ls
+ls -la
+ls -a
+# Distinguish files of directories
+ls -F
+# recursive
+ls -F -R
+# wildcards
+? # one character
+* # any number of characters
+```
+
+## Interacting with directories and files
+
+```
+touch my_file
+ls -l my_file
+touch .
+cp my_file my_file_copy
+ls -l my_file*
+# move to rename
+mv my_file original_file
+rm my_file*
+mv original_file ../my_file
+```
+
+## More on directories
+
+```
+mkdir my_dir
+touch my_dir/file
+mkdir parent_dir
+cp -R my_dir parent_dir
+rm -R my_dir
+mv parent_dir/my_dir ./backup
+```
+
+## Linking files
+
+There are two types of links in the Linux filesystems:
+
+* Symbolic link
+* A hard link
+
+```
+touch data_file
+ln -s data_file linked_file
+ls -l *_file
+ls -i *_file
+# Hard link
+ln data_file hard_linked_file
+```
+
+## Viewing files
+
+```
+tree parent_dir
+cat data_file
+file data_file
+# adds numbers
+cat -n another.file
+# numbers the lines with content
+cat -b another.file
+# supress tabs
+cat -T another.file
+```
+
+## More on viewing files
+
+```
+more data_file
+less data_file
+head data_file
+```
+
+## Viewing logs
+
+```
+tail -f log_file
+tail -n 2 log_file
+```
+
+## Monitoring programs
+
+```
+ps
+# check a particular proces
+ps aux | grep java
+# for other linux/**ux
+ps -efa | grep process
+```
+
+## Real time monitoring
+
+```
+top
+```
+
+## Stopping processes
+
+![kill](img/kill.jpeg)
+
+One does not simply kill -9
+
+```
+Ctrl+C
+kill -15 pid
+kill -SIGTERM pid
+killall http*
+```
+
+## Monitoring memory
+
+```
+free -m
+top
+```
+
+## Monitoring Disk Space
+
+```
+df -h
+du -sh /*
+```
+
+## Users
+
+```
+cat /etc/passwd
+who
+whoami
+```
+
+## Debian based Package System
+
+APT is a set of core tools found inside the Debian operating system. It provides utilities for the installation and removal of software packages and dependencies on a system.
+
+`apt-get` is the high level command line tool to manage packages on a debian based system. Some options:
+
+`apt-cache` provides an interface to perform read-only operations on the APT package cache.
+
+`dpkg` low level package manager for Debian
+
+
+## `apt-get`
+
+Some options
+
+* `install` and `--reinstall`
+* `remove`
+* `purge` or `--purge`
+* `upgrade`
+* `update`
+* `clean` and `autoclean`
+
+## Managing packages
+
+```
+sudo apt-get install [package-name]
+sudo apt-get remove [package-name]
+# uninstall with its configuration files
+sudo apt-get purge [package-name]
+# update package index
+sudo apt-get update
+# install updates
+sudo apt-get upgrade -y
+# If you want to force reinstall a package
+sudo apt-get --reinstall install
+```
+
+## APT cache files
+
+Cache files are located in:
+
+* `/var/cache/apt/archives/`
+
+```
+# cleans the apt cache
+sudo apt-get clean
+# remove useless files from the apt cache
+sudo apt-get autoclean
+```
+
+## List all available packages
+
+```
+apt-cache pkgnames
+apt-cache pkgnames | more
+```
+
+## Searching for a specific debian package
+
+```
+apt-cache search "ufw"
+
+```
+
+## Show debian package information
+
+```
+apt-cache show vim
+```
+
+
+## `dpkg`
+
+Install a package
+
+```
+dpkg -i [debian-package_amd64.deb]
+dpkg --install [debian-package_amd64.deb]
+```
+
+## Remove a package
+
+```
+dpkg --remove [package-name]
+dpkg -r [package-name]
+# remove with its configuration files
+dpkg --purge [package-name]
+```
+
+## List available system packages
+
+```
+dpkg -l [package-name-pattern]
+```
+
+## List files in a package
+
+```
+dpkg -L [package-name]
+dpkg --contents [debian-package_i386.deb]
+```
+
+## Show package information
+
+```
+dpkg -s [package-name]
+```
+
+## More info
+
+```
+man apt-get
+man apt
+man apt-cache
+man dpkg
+```
+
+## Users
+
+```
+useradd newuser
+passwd newuser
+groupadd newgroup
+usermod newuser -G newgroup
+useradd newuser1 -G newgroup
+su newuser
+id
+```
+
+
+## Red Hat Package Manager
+
+rpm is to dpkg as yum is to apt-get.
+
+```
+# install
+rpm -i [rpm-package.rpm]
+# with progress bar
+rpm -ivh [rpm-package.rpm]
+# debug mode
+rpm -ivvvh mode
+# uninstall
+rpm -e [package-name]
+# upgrade
+rpm -U [package-name.rpm]
+# list all installed packages
+rpm -qa | grep foo
+```
+
+## Yellowdog Update Manager
+
+```
+yum help
+yum list available
+yum list installed
+yum info [package-name]
+yum search [package-name]
+yum grouplist
+yum repolist
+yum install [package-name]
+yum update
+yum remove [package-name]
+```
+
+[More info](https://access.redhat.com/articles/yum-cheat-sheet)
+
+## The Linux Text Editors
+
+* Vi
+* Vim
+* Nano
+* Gedit
+* Emacs
+* Pico
+* ...
+
+## Vi 
+
+The default editor that comes with the UNIX operating system is called vi (visual editor).
+
+```
+vi file
+```
+
+Shortcuts
+
+```
+G - Go to the end of a file
+$ - Go to the end of a line
+j - Key down
+k - Key up
+l - Key right
+h - Key left
+x - remove current character
+i - Interactive mode / Insert before cursor
+dd - delete current line
+a - interactive mode plus one space / Insert after cursor
+r - replace character
+R - replace many characters
+w - move to the next word
+0 - move to the begining of a line
+```
+
+## Use Streams
+
+A Linux shell, such as Bash, receives input and sends output as sequences or streams of
+ characters. Each character is independent of the one before it and the one after it. The characters
+are not organized into structured records or fixed-size blocks. Streams are accessed using file
+IO techniques, whether or not the actual stream of characters comes from or goes to a file, a
+keyboard, a window on a display, or some other IO device. Linux shells use three standard I/O
+streams, each of which is associated with a well-known file descriptor:
+
+* `stdout` is the standard output stream, which displays output from commands. It has file descriptor 1.
+* `stderr` is the standard error strream, which dsplays error output from commands. It has file descriptor 2.
+* `stdin` is the standard input stream, which provides input to programs. It has file descriptor 0.
+
+## Redirects
+
+There are two ways of redirect output to a file:
+
+```
+n>
+```
+Redirects output from file descriptor n to a file. You must have write authority to the file. If the file doesn't exist, it is created. If it does exist, the existing contents are usually lost without any warning.
+
+```
+n>>
+```
+Also redirects output from file descriptor n to a file. Again, you must have write authority to the file. If the file doesn't exist, it is created. If it does exist, the output is appended to the end of the file.
+
+## Avoid ovwerwritting with noclobber
+
+```
+set -o noclobber
+```
+
+## Redirecting two streams to one file
+
+```
+ls an* az* &> output.txt
+ls an* az* > output.txt 2>&1
+```
+
+## Ignoring output with /dev/null
+
+```
+ls an* az* > output.txt 2>/dev/null
+```
+
+## Input redirection
+
+```
+echo -e "1 apple\n2 pear\n3 banana" > text1
+tr ' ' '\t'<text1
+```
+
+## Input redirection with a here-document
+
+```
+sort <<END
+hello
+abc
+cba
+bac
+END
+```
+
+Another example
+
+```
+cat > out.txt <<EOF
+This
+is
+a
+very
+long
+text
+EOF
+```
+
+## Pipes
+
+## Grep 
+
+## Cut
+
+## Linux System Management and Architecture Topics, Managing Files in Linux
+
+## Managing Linux Libraries & Software Processes, Finding Files In Linux, Control mounting and unmounting of filesystems
+
+## Filesystem Integrity and Maintenance, The Linux Bash Shell, Linux Disk And User Quotas, 2015 Objective Updates
+
+## Upstart, Systemd, Managing MBR And GPT Partitions, Commands And Compression, Booting The System
+
+## Customizing The Bash Shell, MySQL & SQL Query Language Basics, In Depth User & Group Management, Linux Accessibility
+
+## Introduction To Bash Scripting And Linux Automation, Basic Linux Networking Topics
+
+## Automating System Tasks With Cron and AT, Linux Security Topics, System Logging, Linux Date And Time, Managing Printing
+
+## Localization, SSH And Secure Access, Host Security, Introduction To Linux Email MTA's (Mail Transfer Agents)
+
+## User Interfaces and Desktops (X Server/XWindows), 2015 Objective Updates / bash shell, Administrative Tasks, Log FIles, Networking, LightDM, Security
+
+## Introduction to Red Hat Certified Engineer, System configuration and management, Network services
+
+## HTTP/HTTPS, DNS, NFS
+
+## SMB, SMTP, SSH, NTP, Database Services
+
+## (subnetting, routing, vpn y troubleshooting)
+
+## Python para sysops (scripting & boto)
+
+## Conceptos (consistencia, backup, vaulting , full vs incremental , persistencia & rotacion, etc.)
+
+## Herramientas y metodos ( dumps, scripting, snapshots, , s3,glacier, rds, etc)
+
+## Conceptos y mongodb

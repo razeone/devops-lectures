@@ -688,6 +688,14 @@ uname -v
 # Linux distribution
 cat /etc/*-release
 lsb_release -a</code></pre>
+</div><div id="create-swap-space" class="slide section level2">
+<h1>Create Swap Space</h1>
+<pre><code>sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+sudo /sbin/mkswap /var/swap.1
+sudo chmod 600 /var/swap.1
+sudo /sbin/swapon /var/swap.1</code></pre>
+<p>Add this line to <code>/etc/fstab</code></p>
+<pre><code>swap        /var/swap.1 swap    defaults        0   0</code></pre>
 </div><div id="httphttps-dns-nfs" class="slide section level2">
 <h1>HTTP/HTTPS, DNS, NFS</h1>
 <p>Common used web servers:</p>
@@ -719,18 +727,202 @@ lsb_release -a</code></pre>
 <li>Class C/3 (EV, Extended Validation)</li>
 <li>Validate organization/owner</li>
 </ul>
-</div><div id="smb-smtp-ssh-ntp-database-services" class="slide section level2">
-<h1>SMB, SMTP, SSH, NTP, Database Services</h1>
+</div><div id="more-on-http" class="slide section level2">
+<h1>More on HTTP</h1>
+<pre><code>curl -X GET https://api.github.com/
+curl -X POST -H 'Content-Type: application/json' https://jsonplaceholder.typicode.com/posts/ -d '
+&gt; {&quot;hello&quot;: &quot;world&quot;}'
+curl -X DELETE https://jsonplaceholder.typicode.com/posts/1/</code></pre>
+<p>Other related commands:</p>
+<ul>
+<li>wget</li>
+<li>http</li>
+</ul>
+</div><div id="using-history" class="slide section level2">
+<h1>Using history</h1>
+<pre><code>history
+histoory | grep command
+# The last command
+echo !!
+# The last command starts with
+echo !ls
+# Retrieving arguments from history
+rm !$</code></pre>
+</div><div id="ntp" class="slide section level2">
+<h1>NTP</h1>
+<pre><code># Install ntp
+yum -y install ntp
+# Start service
+sudo systemctl start ntp
+# Check which NTP server is answering
+ntpq -p
+# Check syncronized status
+ntpstat</code></pre>
+</div><div id="ssh" class="slide section level2">
+<h1>SSH</h1>
+<pre><code>ssh user@host
+ssh -i file.pem user@host
+ssh -p 8080 user@host</code></pre>
+<p>Create key</p>
+<pre><code>ssh-keygen -b 4096
+# Updating authorized keys
+scp ~/.ssh/id_rsa.pub username@arvo.suso.org:.ssh/authorized_keys</code></pre>
+<p>Port forwarding</p>
+<pre><code>ssh -L 3306:mysql.suso.org:3306 username@arvo.suso.org</code></pre>
+<p>Secure Copy</p>
+<pre><code>scp report.doc username@remote.host.net:
+scp username@remote.host.net:report.doc report.doc</code></pre>
+</div><div id="mysql-sql-query-language-basics" class="slide section level2">
+<h1>MySQL &amp; SQL Query Language Basics</h1>
+<pre><code>yum -y install mysql</code></pre>
+<p>Create a database with two rows:</p>
+<pre><code>create database my_db;
+GRANT ALL PRIVILEGES on my_db.* TO jorge@'localhost' IDENTIFIED by 'mynonsecurepass';
+$ mysql -u jorge -p
+use my_db;
+CREATE TABLE graduates(name VARCHAR(100), email VARCHAR(150));
+describe graduates;
+INSERT INTO graduates VALUES('Jorge', 'user@example.com');
+INSERT INTO graduates VALUES('Raze', 'example@user.com');
+SELECT * FROM graduates;</code></pre>
+</div><div id="typical-my.cnf-configuration" class="slide section level2">
+<h1>Typical my.cnf configuration</h1>
+<pre><code># vi /etc/my.cnf 
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+user=mysql
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+bind-address=127.0.0.1
+
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid</code></pre>
+<pre><code># Display all users
+select user from mysql.user group by user;</code></pre>
+<pre><code># Creates a new user
+CREATE USER 'wiki'@'localhost' IDENTIFIED BY '$$72!2534Ef3';
+# Grat ALL PRIVILEGES (almost root)
+GRANT ALL PRIVILEGES ON *.* TO 'wiki'@'localhost';
+# Verbose permissions
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES ON `wiki`.* TO 'wiki'@'localhost';
+FLUSH PRIVILEGES; </code></pre>
+<p>Backing up and restore</p>
+<pre><code>mysqldump -u root -p my_db &gt; my_db-`date +%F`.sql
+drop database my_db;
+create database my_db;
+mysql --database my_db -u root &lt; my_db-2017-09-14.sql</code></pre>
+</div><div id="sql-crash-course" class="slide section level2">
+<h1>SQL Crash course</h1>
+<pre><code># Where
+SELECT * FROM graduates WHERE name='Jorge'
+# Alter table
+ALTER TABLE graduates ADD birthdate DATE;
+ALTER TABLE graduates ADD age INT;
+ALTER TABLE graduates DROP COLUMN age;
+# Update
+UPDATE graduates SET birthdate = &quot;1988-12-15&quot; WHERE name='Jorge';
+# Order by
+SELECT * FROM graduates ORDER BY name;
+SELECT * FROM graduates ORDER BY name DESC;
+# Distinct
+SELECT DISTINCT name from graduates;
+# NULL
+SELECT DISTINCT name from graduates WHERE birthdate IS NOT NULL;
+# DELETE
+DELETE from graduates WHERE email = 'example@gmail.com'
+# LIMIT
+SELECT * FROM graduates LIMIT 1;
+# COUNT
+SELECT COUNT(*) FROM graduates;
+# LIKE
+SELECT * FROM graduates WHERE email LIKE '%beeva%';
+# Drop
+DROP TABLE graduates;
+DROP DATABASE my_db;</code></pre>
+</div><div id="database-services" class="slide section level2">
+<h1>Database Services</h1>
+<p>PostgreSQL</p>
+<pre><code># Install
+sudo yum install postgresql-server postgresql-contrib
+sudo postgresql-setup initdb
+sudo systemctl start postgresql
+sudo passwd postgres
+su - postgres
+# Alter postgres password
+psql -d template1 -c &quot;ALTER USER postgres WITH PASSWORD 'newpassword';&quot;</code></pre>
+<p>Postgres listens on 5432 port.</p>
+<p>Useful tools: <code>psql</code> and <code>pgAdmin</code>.</p>
+</div><div id="localization-and-internationalization" class="slide section level2">
+<h1>Localization and Internationalization</h1>
+<pre><code>locale
+# List all spanish locales
+locale --all-locales | grep es_
+echo $LANG
+# Overriding locale
+LC_ALL=en_GB.UTF8
+# Datetime
+date
+date --iso-8601
+date --rfc-2822
+date -u
+# Display date settings
+timedatectl
+# Selecting timezone
+timedatectl list-timezones
+timedatectl set-timezone time_zone
+timedatectl set-ntp yes</code></pre>
+</div><div id="selinux" class="slide section level2">
+<h1>SELinux</h1>
+<p>Security Enhanced Linux (SELinux) is a set of kernel modifications and user-space tools that have been present in CentOS for quite a long time. It is a kind of mechanism that supports Mandatory Access Control security policies, which were initially developed by the US National Security Agency and later released in the public domain to protect computer systems from malicious intrusion and tampering.</p>
+<pre><code># To check which SELinux modules are installed
+rpm -qa | grep selinux
+# This will install all necesary packages to manage SELinux
+yum -y install policycoreutils policycoreutils-python selinux-policy selinux-policy-targeted libselinux-utils setroubleshoot-server setools setools-console mcstrans
+# Let's install apache and vsftp
+yum install httpd vsftpd
+service httpd start
+service vsftpd start</code></pre>
+</div><div id="selinux-mode" class="slide section level2">
+<h1>SELinux Mode</h1>
+<p>There are three types of SELinux modes; they are as follows:</p>
+<ul>
+<li><p><em>Enforcing</em>: In this mode, SELinux enforces its policies onto the system and makes sure that all access by unauthorized users or processes are denied. These access denial events are also logged in to the system as well, which we will look into later on in this chapter.</p></li>
+<li><em>Permissive</em>: This is like a semi-enabled mode state where SELinux doesn’t deny any access as the policies are in permissive mode. This is the best mode to test the SELinux policies.</li>
+<li><p><em>Disabled</em>: In this mode, the SELinux is in a completely disabled state and no logs are created or permissions are denied.</p></li>
+</ul>
+<p>Get the current status.</p>
+<pre><code>getenforce
+sestatus</code></pre>
+<p>The main configuration file is:</p>
+<pre><code>/etc/selinux/config</code></pre>
+<p>Let’s change it to <code>permissive</code> mode.</p>
+<p>The SELINUXTYPE parameter in the config file also has three options, as follows:</p>
+<ul>
+<li><em>Targeted</em>: This is the default value that allows you to customize and fine-tune your policies</li>
+<li><em>Minimum</em>: In this mode, only the selected processes are protected</li>
+<li><em>MLS</em>: Multi Level Security is an advanced mode of protection and you need an additional package to install it as well</li>
+</ul>
+<pre><code>reboot
+# After reboot, let's check for any message on SELinux
+grep 'SELinux' /var/log/messages
+# We can also change the SELinux mode on the fly
+setenforce permissive</code></pre>
+</div><div id="smb" class="slide section level2">
+<h1>SMB</h1>
+</div><div id="smtp" class="slide section level2">
+<h1>SMTP</h1>
 </div><div id="upstart-systemd-managing-mbr-and-gpt-partitions-commands-and-compression-booting-the-system" class="slide section level2">
 <h1>Upstart, Systemd, Managing MBR And GPT Partitions, Commands And Compression, Booting The System</h1>
-</div><div id="customizing-the-bash-shell-mysql-sql-query-language-basics-in-depth-user-group-management-linux-accessibility" class="slide section level2">
-<h1>Customizing The Bash Shell, MySQL &amp; SQL Query Language Basics, In Depth User &amp; Group Management, Linux Accessibility</h1>
+</div><div id="customizing-the-bash-shell-in-depth-user-group-management-linux-accessibility" class="slide section level2">
+<h1>Customizing The Bash Shell, In Depth User &amp; Group Management, Linux Accessibility</h1>
 </div><div id="introduction-to-bash-scripting-and-linux-automation-basic-linux-networking-topics" class="slide section level2">
 <h1>Introduction To Bash Scripting And Linux Automation, Basic Linux Networking Topics</h1>
 </div><div id="automating-system-tasks-with-cron-and-at-linux-security-topics-system-logging-linux-date-and-time-managing-printing" class="slide section level2">
 <h1>Automating System Tasks With Cron and AT, Linux Security Topics, System Logging, Linux Date And Time, Managing Printing</h1>
-</div><div id="localization-ssh-and-secure-access-host-security-introduction-to-linux-email-mtas-mail-transfer-agents" class="slide section level2">
-<h1>Localization, SSH And Secure Access, Host Security, Introduction To Linux Email MTA’s (Mail Transfer Agents)</h1>
+</div><div id="host-security-introduction-to-linux-email-mtas-mail-transfer-agents" class="slide section level2">
+<h1>Host Security, Introduction To Linux Email MTA’s (Mail Transfer Agents)</h1>
 </div><div id="user-interfaces-and-desktops-x-serverxwindows-2015-objective-updates-bash-shell-administrative-tasks-log-files-networking-lightdm-security" class="slide section level2">
 <h1>User Interfaces and Desktops (X Server/XWindows), 2015 Objective Updates / bash shell, Administrative Tasks, Log FIles, Networking, LightDM, Security</h1>
 </div><div id="introduction-to-red-hat-certified-engineer-system-configuration-and-management-network-services" class="slide section level2">

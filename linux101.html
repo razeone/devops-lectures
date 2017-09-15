@@ -909,6 +909,62 @@ sestatus</code></pre>
 grep 'SELinux' /var/log/messages
 # We can also change the SELinux mode on the fly
 setenforce permissive</code></pre>
+</div>
+<div id="networking" class="titleslide slide section level1"><h1>Networking</h1></div><div id="basic-linux-networking-topics" class="slide section level2">
+<h1>Basic Linux Networking Topics</h1>
+<ul>
+<li>OSI Layers</li>
+</ul>
+</div><div id="basic-pinging" class="slide section level2">
+<h1>Basic pinging</h1>
+<pre><code>ping google.com
+ping 192.168.1.254
+# Broadcast
+ping -b 172.31.15.255
+# Limit number of request
+ping -c 5 www.beeva.com</code></pre>
+</div><div id="ifconfig" class="slide section level2">
+<h1>ifconfig</h1>
+<pre><code>ifconfig
+ifconfig [interface]
+# Configure eth0 interface with IP, netmask and broadcast address
+ifconfig eth0 192.168.10.25 netmask 255.255.255.0 broadcast 192.168.10.255
+# Setting MTU size
+ifconfig eth0 mtu XXXX
+# Setting interface in promiscous mode
+ifconfig eth0 - promisc</code></pre>
+</div><div id="traceroute" class="slide section level2">
+<h1>traceroute</h1>
+<pre><code>traceroute google.com
+# More nice
+mtr google.com</code></pre>
+</div><div id="netstat" class="slide section level2">
+<h1>netstat</h1>
+<pre><code># To displays routing table information use option as -r
+netstat -r
+# Listing all ports (both TCP and UDP) using netstat -a option
+netstat -a | more
+# Listing only TCP connections
+netstat -at
+# Listing only UDP connections
+netstat -au
+# All listening connections
+netstat -l
+# List all TCP listening ports
+netstat -lt
+# List all UDP listening ports
+netstat -lu
+# Show statistics by protocol
+netstat -s
+# Show TCP statistics
+netstat -st</code></pre>
+</div><div id="other-useful-commands" class="slide section level2">
+<h1>Other useful commands</h1>
+<pre><code>nslookup www.beeva.com
+host google.com
+arp -e
+ethtool eth0
+iwconfig [interface]</code></pre>
 </div><div id="smb" class="slide section level2">
 <h1>SMB</h1>
 </div><div id="smtp" class="slide section level2">
@@ -917,8 +973,8 @@ setenforce permissive</code></pre>
 <h1>Upstart, Systemd, Managing MBR And GPT Partitions, Commands And Compression, Booting The System</h1>
 </div><div id="customizing-the-bash-shell-in-depth-user-group-management-linux-accessibility" class="slide section level2">
 <h1>Customizing The Bash Shell, In Depth User &amp; Group Management, Linux Accessibility</h1>
-</div><div id="introduction-to-bash-scripting-and-linux-automation-basic-linux-networking-topics" class="slide section level2">
-<h1>Introduction To Bash Scripting And Linux Automation, Basic Linux Networking Topics</h1>
+</div><div id="introduction-to-bash-scripting-and-linux-automation" class="slide section level2">
+<h1>Introduction To Bash Scripting And Linux Automation</h1>
 </div><div id="automating-system-tasks-with-cron-and-at-linux-security-topics-system-logging-linux-date-and-time-managing-printing" class="slide section level2">
 <h1>Automating System Tasks With Cron and AT, Linux Security Topics, System Logging, Linux Date And Time, Managing Printing</h1>
 </div><div id="host-security-introduction-to-linux-email-mtas-mail-transfer-agents" class="slide section level2">

@@ -1285,21 +1285,222 @@ grep 'SELinux' /var/log/messages
 setenforce permissive
 ```
 
-## SMB
+## Policies
+
+```
+semodule -l | more
+# modules
+ls /etc/selinux/targeted/modules/active/modules/
+# policies
+ls /etc/selinux/targeted/policy/
+```
+
+We cannot modify these rules directly but can manage them using the semanage boolean command.
+
+```
+semanage boolean -l | more
+semanage boolean -l | grep ftpd
+```
+
+## We'll be back later
+
+![Back soon](img/back.jpeg)
+
+# Networking
+
+## Basic Linux Networking Topics
+
+* OSI Layers
+
+![OSI](img/osi.png)
+
+
+## Protocols
+
+```
+cat /etc/protocols 
+```
+
+![Protocols](img/protols.png)
+
+
+## Unicast
+
+![Unicast](img/unicast.png)
+
+## Multicast
+
+![Multicast](img/multicast.png)
+
+## Broadcast
+
+![Broadcast](img/broadcast.png)
+
+## Anycast
+
+![Anycast](img/anycast.png)
+
+## LAN-WAN-MAN
+
+* Local Area Network
+* Wide Area Network
+* Metropolitan Area Network
+
+## Cnofiguration files
+
+```
+/etc/sysconfig/network
+/etc/sysconfig/network-scripts/ifcfg-*
+
+```
+
+## Basic pinging
+
+```
+ping google.com
+ping 192.168.1.254
+# Broadcast
+ping -b 172.31.15.255
+# Limit number of request
+ping -c 5 www.beeva.com
+```
+
+## ifconfig
+
+```
+ifconfig
+ifconfig [interface]
+# Configure eth0 interface with IP, netmask and broadcast address
+ifconfig eth0 192.168.10.25 netmask 255.255.255.0 broadcast 192.168.10.255
+# Setting MTU size
+ifconfig eth0 mtu XXXX
+# Setting interface in promiscous mode
+ifconfig eth0 - promisc
+```
+
+## route
+
+```
+netstat -r
+route add default gw 192.168.1.1
+```
+
+## traceroute
+
+```
+traceroute google.com
+# More nice
+mtr google.com
+```
+
+## netstat
+
+```
+# To displays routing table information use option as -r
+netstat -r
+# Listing all ports (both TCP and UDP) using netstat -a option
+netstat -a | more
+# Listing only TCP connections
+netstat -at
+# Listing only UDP connections
+netstat -au
+# All listening connections
+netstat -l
+# List all TCP listening ports
+netstat -lt
+# List all UDP listening ports
+netstat -lu
+# Show statistics by protocol
+netstat -s
+# Show TCP statistics
+netstat -st
+```
+
+## telnet and Nmap
+
+```
+telnet 192.168.152.5
+telnet 192.168.152.5 8080
+```
+
+Mapping
+
+```
+nmap 192.168.2.8
+nmap -v 192.168.2.8
+nmap 192.168.2.*
+nmap 192.168.2.8,10
+nmap 192.168.2.8-154
+nmap -A localhost
+nmap -O localhost
+nmap -sA localhost
+nmap -sP 192.168.2.2/24
+nmap -F locallhost
+```
+
+## tcpdump
+
+```
+tcpdump host 192.168.1.38
+tcpdump tcp port 22
+```
+
+## Other useful commands
+
+```
+dhclient
+nslookup www.beeva.com
+host google.com
+arp -e
+ethtool eth0
+iwconfig [interface]
+whois www.beeva.com
+```
+
+## Replacements for some deprecated tools
+
+![Replacements](img/replacements.png)
 
 
 
 ## SMTP
 
+* Common ports 25, 465, or 587
+* Port 465 (SSL required)
+* Port 587 (TLS required)
+
+## Introduction To Linux Email MTA's (Mail Transfer Agents)
+
+By default in linux we have the `sendmail` MTA.
+
+Other MTAs
+
+* Postfix
+* Exim
+* Qmail
+* Mutt
+* Alpine
+
+## A little bit of sendmail
+
+```
+yum install sendmail sendmail-cf m4
+
+```
+
+## SMB
+
 ## Upstart, Systemd, Managing MBR And GPT Partitions, Commands And Compression, Booting The System
 
-## Customizing The Bash Shell, In Depth User & Group Management, Linux Accessibility
+## Customizing The Bash Shell
 
-## Introduction To Bash Scripting And Linux Automation, Basic Linux Networking Topics
+## In Depth User & Group Management, Linux Accessibility
 
-## Automating System Tasks With Cron and AT, Linux Security Topics, System Logging, Linux Date And Time, Managing Printing
+## Introduction To Bash Scripting And Linux Automation
 
-## Host Security, Introduction To Linux Email MTA's (Mail Transfer Agents)
+## Automating System Tasks With Cron and AT, Linux Security Topics, System Logging, Managing Printing
+
+## Host Security, 
 
 ## User Interfaces and Desktops (X Server/XWindows), 2015 Objective Updates / bash shell, Administrative Tasks, Log FIles, Networking, LightDM, Security
 

@@ -1485,16 +1485,64 @@ Other MTAs
 
 ```
 yum install sendmail sendmail-cf m4
-
+echo "Subject: sendmail test" | sendmail -v jorge@raze.mx
 ```
 
-## SMB
+Now let's create a file called `mail.txt`
+
+```
+To: my@email.com
+Subject: sendmail test two
+From: me@myserver.com
+
+And here goes the e-mail body, test test test..
+```
+
+And then:
+
+```
+sendmail -vt < ~/mail.txt
+# Other way of use it
+sendmail user@example.com  < /tmp/email.txt
+```
+
+## In Depth User & Group Management, Linux Accessibility
+
+```
+useradd testuser
+cat /etc/passwd
+passwd testuser
+groupadd testgroup
+# Adds the user to the group and personal group
+useradd testuser1 -G testgroup
+# With g lower the user only belongs to the given group
+useradd testuser2 -g testgroup
+# Listing all groups
+cat /etc/group
+```
+
+## Password aging
+
+```
+# Lock the user
+usermod -L <username>
+# Force password changing
+chage -d 0 <username>
+# Let's use python to generate a secure password
+>>> import crypt
+>>> crypt.crypt("$0m3P455", "Salt00\")
+usermod -p "<encrypted-password>" <username>
+```
+
+Now after a succesful login, the user will be prompted requesting a new password.
+
+
 
 ## Upstart, Systemd, Managing MBR And GPT Partitions, Commands And Compression, Booting The System
 
 ## Customizing The Bash Shell
 
-## In Depth User & Group Management, Linux Accessibility
+## SMB
 
 ## Introduction To Bash Scripting And Linux Automation
 

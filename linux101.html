@@ -1080,15 +1080,46 @@ whois www.beeva.com</code></pre>
 </div><div id="a-little-bit-of-sendmail" class="slide section level2">
 <h1>A little bit of sendmail</h1>
 <pre><code>yum install sendmail sendmail-cf m4
-</code></pre>
-</div><div id="smb" class="slide section level2">
-<h1>SMB</h1>
+echo &quot;Subject: sendmail test&quot; | sendmail -v jorge@raze.mx</code></pre>
+<p>Now let’s create a file called <code>mail.txt</code></p>
+<pre><code>To: my@email.com
+Subject: sendmail test two
+From: me@myserver.com
+
+And here goes the e-mail body, test test test..</code></pre>
+<p>And then:</p>
+<pre><code>sendmail -vt &lt; ~/mail.txt
+# Other way of use it
+sendmail user@example.com  &lt; /tmp/email.txt</code></pre>
+</div><div id="in-depth-user-group-management-linux-accessibility" class="slide section level2">
+<h1>In Depth User &amp; Group Management, Linux Accessibility</h1>
+<pre><code>useradd testuser
+cat /etc/passwd
+passwd testuser
+groupadd testgroup
+# Adds the user to the group and personal group
+useradd testuser1 -G testgroup
+# With g lower the user only belongs to the given group
+useradd testuser2 -g testgroup
+# Listing all groups
+cat /etc/group</code></pre>
+</div><div id="password-aging" class="slide section level2">
+<h1>Password aging</h1>
+<pre><code># Lock the user
+usermod -L &lt;username&gt;
+# Force password changing
+chage -d 0 &lt;username&gt;
+# Let's use python to generate a secure password
+&gt;&gt;&gt; import crypt
+&gt;&gt;&gt; crypt.crypt(&quot;$0m3P455&quot;, &quot;Salt00\&quot;)
+usermod -p &quot;&lt;encrypted-password&gt;&quot; &lt;username&gt;</code></pre>
+<p>Now after a succesful login, the user will be prompted requesting a new password.</p>
 </div><div id="upstart-systemd-managing-mbr-and-gpt-partitions-commands-and-compression-booting-the-system" class="slide section level2">
 <h1>Upstart, Systemd, Managing MBR And GPT Partitions, Commands And Compression, Booting The System</h1>
 </div><div id="customizing-the-bash-shell" class="slide section level2">
 <h1>Customizing The Bash Shell</h1>
-</div><div id="in-depth-user-group-management-linux-accessibility" class="slide section level2">
-<h1>In Depth User &amp; Group Management, Linux Accessibility</h1>
+</div><div id="smb" class="slide section level2">
+<h1>SMB</h1>
 </div><div id="introduction-to-bash-scripting-and-linux-automation" class="slide section level2">
 <h1>Introduction To Bash Scripting And Linux Automation</h1>
 </div><div id="automating-system-tasks-with-cron-and-at-linux-security-topics-system-logging-managing-printing" class="slide section level2">

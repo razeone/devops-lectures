@@ -1542,7 +1542,6 @@ Now after a succesful login, the user will be prompted requesting a new password
 # Compresion de Archivos
 ## tar
 El comando "TAR" es utilizado normalmente para empaquetar, desempaquetar comprimir y descomprimir archivos.
-
 La forma de usar este comando es la siguiente:
 
 

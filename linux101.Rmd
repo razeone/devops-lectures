@@ -1247,14 +1247,14 @@ service vsftpd start
 There are three types of SELinux modes; they are as follows:
 
 * *Enforcing*: In this mode, SELinux enforces its policies onto the system and makes sure that all access by unauthorized users or processes are denied. These access
-denial events are also logged in to the system as well, which we will look into later
-on in this chapter.
+  denial events are also logged in to the system as well, which we will look into later
+  on in this chapter.
 
 * *Permissive*: This is like a semi-enabled mode state where SELinux doesn’t deny any
-access as the policies are in permissive mode. This is the best mode to test the
-SELinux policies.
+  access as the policies are in permissive mode. This is the best mode to test the
+  SELinux policies.
 * *Disabled*: In this mode, the SELinux is in a completely disabled state and no logs are
-created or permissions are denied.
+  created or permissions are denied.
 
 Get the current status.
 
@@ -1538,28 +1538,60 @@ Now after a succesful login, the user will be prompted requesting a new password
 
 
 
-## Upstart, Systemd, Managing MBR And GPT Partitions, Commands And Compression, Booting The System
+## Systemd
+Systemd is an init system used in Linux distributions to bootstrap the user space. It is a replacement for the UNIX System V and Berkeley Software Distribution (BSD) init systems. The goal is unification of basic Linux configurations and service behaviors across all distributions.
 
-## Customizing The Bash Shell
+It has three general functions:
 
-## SMB
+* A system and service manager
+* A software plataform
+* The glue between applications and the kernel
 
-## Introduction To Bash Scripting And Linux Automation
+Systemd is not just the name of the init daemon but also refers to the entire software bundle around it, which, in addition to the systemd init daemon, includes the daemons journald, logind and networkd, and many other low-level components.
 
-## Automating System Tasks With Cron and AT, Linux Security Topics, System Logging, Managing Printing
+## Systemd Units
+Systemd introduces the concept of systemd units. These units are represented by unit configuration files and encapsulate information about system services, listening sockets, saved system state snapshots, and other objects that are relevant to the init system.
 
-## Host Security, 
+```
+Unit Types
+Service unit:		.service    A system service
+Target unit:	    .target	    A group of systemd units
+Automount unit:	    .automount	A file system automount point
+Device unit:	   	.device	    A device file recognized by the kernel
+Mount unit:		    .mount	    A file system mount point
+Path unit:		    .path       A file or directory in a file system
+Scope unit:		    .scope      An externally created process
+Slice unit:		    .slice      A group of hierarchically organized 
+                                units that manage system processes
+Snapshot unit:	    .snapshot	A saved state of the systemd manager
+Socket unit:		.socket	    An inter-process communication socket
+Swap unit:		    .swap       A swap device or swap file
+Timer unit:		    .timer	    A systemd timer
+```
 
-## User Interfaces and Desktops (X Server/XWindows), 2015 Objective Updates / bash shell, Administrative Tasks, Log FIles, Networking, LightDM, Security
+##Systemd Unit Files Locations
+```
+/usr/lib/systemd/system/    Systemd unit files distributed with installed
+                            RPM packages
+/run/systemd/system/        Systemd unit files created at run time.
+/etc/systemd/system/        Systemd unit files created by system 
+                            enable as well as unit files added for
+                            extending a service.
+```
 
-## Introduction to Red Hat Certified Engineer, System configuration and management, Network services
-
-## (subnetting, routing, vpn y troubleshooting)
-
-## Python para sysops (scripting & boto)
-
-## Conceptos (consistencia, backup, vaulting , full vs incremental , persistencia & rotacion, etc.)
-
-## Herramientas y metodos ( dumps, scripting, snapshots, , s3,glacier, rds, etc)
-
-## Conceptos y mongodb
+##Systemd Cheatsheet
+```shell
+# To start a service
+systemctl start [name.service]
+# To stop a service
+systemctl stop [name.service]
+# To restart a service
+systemctl restart [name.service]
+# To reload a service
+systemctl reload [name.service]
+# To review a service status
+systemctl status [name.service]
+# To see if a service is active
+systemctl is-active [name.service]
+# To see all services
+systemctl list-units --type service --all

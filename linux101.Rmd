@@ -1541,13 +1541,9 @@ Now after a succesful login, the user will be prompted requesting a new password
 ## Upstart, Systemd, Managing MBR And GPT Partitions, Commands And Compression, Booting The System
 # Compresion de Archivos
 ## tar
-<p>
 El comando "TAR" es utilizado normalmente para empaquetar, desempaquetar comprimir y descomprimir archivos.
-</p>
 
-<p>
 La forma de usar este comando es la siguiente:
-</p>
 
 
 ```
@@ -1601,9 +1597,7 @@ Los parametros que puedes usar son:
 ```
 
 ## zip
-<p>
 La forma de usar este comando es la siguiente:
-</p>
 ```
 [BASH]# zip [parametros]
 ```

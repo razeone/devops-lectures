@@ -1613,6 +1613,65 @@ La forma de usar este comando es la siguiente:
 
 
 
+## Managing MBR And GPT Partitions
+##MBR
+
+![MBR_disk](img/basic-mbr-disk.jpg)
+
+The MBR holds the information on how the logical partitions, containing file systems, are organized on that medium. The MBR also contains executable code to function as a loader for the installed operating system—usually by passing control over to the loader's second stage, or in conjunction with each partition's volume boot record (VBR).  The organization of the partition table in the MBR limits the maximum addressable storage space of a disk to 2 TiB (232 × 512 bytes).
+
+##GPT
+
+![GPT_disk](img/basic-gpt-disk.jpg)
+
+GUID Partition Table (GPT) is a standard for the layout of the partition table on a physical storage device used in a desktop or server PC, such as a hard disk drive or solid-state drive, using globally unique identifiers (GUID). Although it forms a part of the Unified Extensible Firmware Interface (UEFI) standard (Unified EFI Forum proposed replacement for the PC BIOS), it is also used on some BIOS systems because of the limitations of master boot record (MBR) partition tables, which use 32 bits for storing logical block addresses (LBA) and size information on a traditionally 512-byte disk sector.
+
+![GPT_disk](img/filesystem.jpg)
+
+```
+#View all disk partition
+fdisk -l
+
+#View Specific Disk
+fdisk -l /dev/sdx
+
+#Delete partition
+fdisk /dev/sdx
+
+Command (m for help): d #Command delete
+Partition number (1-x): x #Number of partition
+Command (m for help): w #Write the table partition
+
+#Create partition
+fdisk /dev/sdx
+
+Command (m for help): n
+p
+w
+
+#Format partition
+mkfs.ext4 /dev/sdxy
+```
+
+##Utility parted
+
+```
+#Enter parted
+parted
+
+#Check disk
+print
+
+#Resize partition
+resizepart
+
+#Rescue partition
+rescue
+
+#Change partition flags
+set flags on/off
+```
+
 ## Customizing The Bash Shell
 
 ## SMB

@@ -1595,3 +1595,5 @@ systemctl status [name.service]
 systemctl is-active [name.service]
 # To see all services
 systemctl list-units --type service --all
+```
+

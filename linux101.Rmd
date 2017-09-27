@@ -1539,6 +1539,62 @@ Now after a succesful login, the user will be prompted requesting a new password
 
 
 ## Upstart, Systemd, Managing MBR And GPT Partitions, Commands And Compression, Booting The System
+# Linux boot process.
+
+
+![](http://static.thegeekstuff.com/wp-content/uploads/2011/02/linux-boot-process.png)
+
+**1. BIOS**
+
+    BIOS stands for Basic Input/Output System
+    Performs some system integrity checks
+    Searches, loads, and executes the boot loader program.
+    
+**2. MBR MBR stands for Master Boot Record.**
+
+    MBR loads and executes the GRUB boot loader.
+    It is located in the 1st sector of the bootable disk. Typically /dev/hda, or /dev/sda
+    MBR is less than 512 bytes in size. This has three components 1) primary boot loader info in 1st 446 bytes 2) partition table info in next 64 bytes 3) mbr validation check in last 2 bytes.
+    It contains information about GRUB (or LILO in old systems).
+
+**3. GRUB**
+
+    GRUB stands for Grand Unified Bootloader.
+    If you have multiple kernel images installed on your system, you can choose which one to be executed.
+    GRUB displays a splash screen, waits for few seconds, if you don’t enter anything, it loads the default kernel image as specified in the grub configuration file.
+
+**4. Kernel**
+
+    Mounts the root file system as specified in the “root=” in grub.conf
+    Kernel executes the /sbin/init program
+    Since init was the 1st program to be executed by Linux Kernel, it has the process id (PID) of 1. Do a ‘ps -ef | grep init’ and check the pid.
+    initrd stands for Initial RAM Disk.
+    
+**5. Init**
+
+    Looks at the /etc/inittab file to decide the Linux run level.
+    Following are the available run levels
+        0 – halt
+        1 – Single user mode
+        2 – Multiuser, without NFS
+        3 – Full multiuser mode
+        4 – unused
+        5 – X11
+        6 – reboot
+    Init identifies the default initlevel from /etc/inittab and uses that to load all appropriate program.
+    Execute ‘grep initdefault /etc/inittab’ on your system to identify the default run level
+
+**6. Runlevel programs**
+
+    When the Linux system is booting up, you might see various services getting started. For example, it might say “starting sendmail …. OK”. Those are the runlevel programs, executed from the run level directory as defined by your run level.
+    Depending on your default init level setting, the system will execute the programs from one of the following directories.
+        Run level 0 – /etc/rc.d/rc0.d/
+        Run level 1 – /etc/rc.d/rc1.d/
+        Run level 2 – /etc/rc.d/rc2.d/
+        Run level 3 – /etc/rc.d/rc3.d/
+        Run level 4 – /etc/rc.d/rc4.d/
+        Run level 5 – /etc/rc.d/rc5.d/
+        Run level 6 – /etc/rc.d/rc6.d/
 
 ## Customizing The Bash Shell
 

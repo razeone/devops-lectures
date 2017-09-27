@@ -1621,7 +1621,121 @@ La forma de usar este comando es la siguiente:
 
 ## Automating System Tasks With Cron and AT, Linux Security Topics, System Logging, Managing Printing
 
+# System Logging
 
+###¿Qué es un system log?
+
+> El archivo de registro del sistema contiene eventos registrados por
+> los componentes del sistema operativo. Estos eventos son a menudo
+> predeterminados por el propio sistema operativo. Los archivos de
+> registro del sistema pueden contener información sobre cambios de
+> dispositivos, controladores de dispositivos, cambios en el sistema,
+> eventos, operaciones y más.
+
+###¿Cómo veo los archivos de registro en linux?
+
+> Muchos archivos de registro valiosos son creados automáticamente por
+Linux. Puede encontrarlos en su directorio /var/log.
+
+###Nombres comunes de archivos de registro de Linux y uso
+
+
+
+> _/var/log/messages_ General message and system related stuff
+
+> _/var/log/auth.log_ : Authentication logs 
+
+> _/var/log/kern.log_ : Kernel logs
+
+> _/var/log/cron.log_ : Crond logs (cron job)
+
+> _/var/log/maillog_  : Mail server logs 
+
+> _/var/log/qmail/_   : Qmail log directory (more files inside this directory) 
+
+> _/var/log/httpd/_   : Apache access and error logs directory 
+
+> _/var/log/lighttpd/_: Lighttpd access and error logs directory
+
+> _/var/log/boot.log_ : System boot log
+
+> _/var/log/mysqld.log_ : MySQL database server log file 
+
+> _/var/log/secure /var/log/auth.log_ : Authentication log 
+
+> _/var/log/utmp /var/log/wtmp_ : Login records file
+
+> _/var/log/yum.log_  : Yum command log file.
+
+###JOURNALCTL
+
+> Since the release of Fedora 20, syslog has been replaced with the
+> Journal. The journal stores the same information as classic syslog and
+> running the ‘journalctl’ command will output a perfect copy of the
+> traditional syslog files from /var/log/ , but with improvements:
+> 
+
+>  - Lines of error priority (and higher) will be highlighted red. 
+
+>  - Lines of notice/warning priority will be highlighted bold. 
+
+>  - The timestamps are converted into your local time-zone. 
+
+>  - The output is auto-paged with your pager of choice (defaults to less). 
+
+>  - This will show all available data, including rotated logs. 
+
+>  - Between the output of each boot we’ll add a line clarifying that a new boot begins now.
+
+###Comandos journalctl
+
+> Los logs son visualizados por el usuario root o añadiendo sudo delante
+> de cada comando.
+
+>  - Ver todos los logs sin filtro:
+
+>    >  **journalctl**
+
+>  - Ver sólo los logs desde este inicio:
+
+>    > **journalctl -b**
+
+>  - Ver todos los logs filtrados por prioridad (“emerg”, “alert”, “crit”, “err”, “warning”, “notice”, “info”, “debug”):
+
+>    > **journalctl -p crit**
+
+>  - Ver todos los logs de errores sólo de este arranque:
+
+>    > **journalctl -b -p err**
+
+>  - Ver logs por servicio:
+
+>    > **journal -u tomcat**
+
+>  - Ver logs por servicio y seguir la traza mientras crece el archivo:
+
+>    > **journal -u tomcat -f**
+
+>  - Ver logs por PID:
+
+>    > **pidof bluetoothd**
+>    > **journal _PID=864**
+
+>  - Ver logs por timestamp:
+
+>    > **journalctl --since=2017-09-18 journalctl --since=2017-09-18 --until=“2017-09-19 13:00:00”**
+
+>  - Ver logs por servicio y timestamp:
+
+>    > **journalctl -u tomcat.service --since=19:30 --until=20:30**
+
+>  - Ver logs generados por un ejecutable:
+
+>    > **journalctl /usr/sbin/anacron**
+
+>  - Ver logs del kernel:
+
+>    > **journalctl -k**
 
 ## AT
 

@@ -1247,14 +1247,14 @@ service vsftpd start
 There are three types of SELinux modes; they are as follows:
 
 * *Enforcing*: In this mode, SELinux enforces its policies onto the system and makes sure that all access by unauthorized users or processes are denied. These access
-denial events are also logged in to the system as well, which we will look into later
-on in this chapter.
+  denial events are also logged in to the system as well, which we will look into later
+  on in this chapter.
 
 * *Permissive*: This is like a semi-enabled mode state where SELinux doesn’t deny any
-access as the policies are in permissive mode. This is the best mode to test the
-SELinux policies.
+  access as the policies are in permissive mode. This is the best mode to test the
+  SELinux policies.
 * *Disabled*: In this mode, the SELinux is in a completely disabled state and no logs are
-created or permissions are denied.
+  created or permissions are denied.
 
 Get the current status.
 
@@ -1547,6 +1547,110 @@ Now after a succesful login, the user will be prompted requesting a new password
 ## Introduction To Bash Scripting And Linux Automation
 
 ## Automating System Tasks With Cron and AT, Linux Security Topics, System Logging, Managing Printing
+
+
+
+## AT
+
+The **at** command schedules a command to be run once at a particular time that you normally have permission to run.
+
+You start by running the **at** command at the command line, passing it the scheduled time as the option.  It then places you at a special prompt, where you can type in the command (or series of commands) to be run at the scheduled time. When you're done, press **Control-D** on a new line, and your command will be placed in the queue.
+
+```sh
+at 9:30 PM Tue
+```
+
+```shell
+at> echo "Hola Mundo, son las 9:30 pm."
+at> ^D
+job 1 at Tue Sept 26 09:30:00 2017
+```
+
+You can use the program **atq** to view your currently-queued **at** jobs. Type **atq** to display the queue.
+
+```Shell
+atq
+```
+
+```shell
+1      Fri Oct 22 09:48:00 2017 a user
+```
+
+This information is, from left to right: **job number**, **date**, **hour**, **year**, **queue**, and **username**.
+
+### Remove/Delete a scheduled at job using atrm
+
+You can use atrm command ( or **at -d** ), to delete a particular job. For example, to delete the job number 4, use the following atrm command.
+
+```
+atrm 4
+```
+
+### Additional Command Line Options
+
+Additional command line options for **at** and `batch` include:
+
+| Option | Description                              |
+| ------ | ---------------------------------------- |
+| `-f`   | Read the commands or shell script from a file instead of specifying them at the prompt. |
+| `-m`   | Send email to the user when the job has been completed. |
+| `-v`   | Display the time that the job will be executed. |
+
+## Crontab
+
+The **crontab** is a list of commands that you want to run on a regular schedule, and also the name of the command used to manage that list.
+
+**crontab** stands for "cron table," because it uses the job scheduler **cron** to execute tasks; **cron** itself is named after "<u>chronos</u>," the Greek word for time.
+
+To edit the crontab, use this command:
+
+```shell
+crontab -e
+```
+
+The default crontab file looks like this:
+
+```Shell
+
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+#·
+# For more information see the manual pages of crontab(5) and cron(8)
+#·
+# m h  dom mon dow   command
+```
+
+The information you must include is (in order of appearance):
+
+1. A number (or list of numbers, or range of numbers), *m*, representing the minute of the hour;
+2. A number (or list of numbers, or range of numbers), *h*, representing the hour of the day;
+3. A number (or list of numbers, or range of numbers), *dom*, representing the day of the month;
+4. A number (or list, or range), or name (or list of names), *mon*, representing the month of the year;
+5. A number (or list, or range), or name (or list of names), *dow*, representing the day of the week; and
+6. *command*, which is the command to be run, exactly as it would appear on the command line.
+
+An example of crontab format with commented fields is as follows:
+
+```Shell
+# Minute   Hour   Day of Month       Month          Day of Week        Command    
+# (0-59)  (0-23)     (1-31)    (1-12 or Jan-Dec)  (0-6 or Sun-Sat)                
+    0        2          12             *                *            /usr/bin/find
+```
+
+To view your crontab, you can use this command:
+
+```shell
+crontab -v
+```
+
+To view your crontab entries type crontab -l from your linux:
+
+```shell
+crontab -l
+```
+
+
 
 ## Host Security, 
 

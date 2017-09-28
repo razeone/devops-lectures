@@ -1610,7 +1610,70 @@ La forma de usar este comando es la siguiente:
 ```
 [BASH]# unzip archivo.zip
 ```
+#### rar
 
+El comando "rar" es utilizado normalmente para empaquetar y comprimir archivos.
+
+Para instalar rar
+```   
+sudo apt-get install rar
+```
+
+Para comprimir en formato rar, se usara el siguiente comando:
+```
+rar -a archivo.rar ficheros
+```
+
+#### unrar
+
+El comando "rar" es utilizado normalmente para desempaqueter, descomprimir y ver el comtenido de archivos.
+
+Para istalar unrar 
+```
+sudo apt-get install unrar –fix-missing
+```
+
+Para descomprimir ficheros en formato rar, se utiliza el siguiente comando:
+```
+unrar -x archivo.rar
+```
+
+Para ver el contenido de un fichero rar, se usa el siguiente comando:
+```
+unrar -v archivo.rar
+unrar -l archivo.rar 
+```
+
+#### 7zip
+
+Para Instlar 7zip
+```
+yum install p7zip
+```
+
+Para comprimir 
+```
+7za a myfiles.7z myfiles/
+```
+
+Pra descomprimir .7z
+```
+7za e myfiles.7z  
+- 7za – Nombre del comando 
+```
+
+## Parametros para 7za 
+```
+  * a: Añadir archivos 
+  * d: Eliminar archivos del paquete
+  * e: Extraer archivos del paquete (sin usar nombres de directorio)
+  * i: Mostrar información sobre los formatos compatibles
+  * l: Listar el contenido del archivo
+  * rn: Renombrar archivos en archivo
+  * t: Comprobar la integridad del archivo
+  * u: Actualizar archivos al paquete
+  * x: archivos eXtract con rutas completas
+```
 
 
 ## Managing MBR And GPT Partitions

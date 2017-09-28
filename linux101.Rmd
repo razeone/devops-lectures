@@ -1672,7 +1672,6 @@ rescue
 #Change partition flags
 set flags on/off
 ```
-=======
 ## Systemd
 Systemd is an init system used in Linux distributions to bootstrap the user space. It is a replacement for the UNIX System V and Berkeley Software Distribution (BSD) init systems. The goal is unification of basic Linux configurations and service behaviors across all distributions.
 
@@ -1994,7 +1993,6 @@ crontab -l
 ```
 
 
-=======
 ## Systemd Units
 Systemd introduces the concept of systemd units. These units are represented by unit configuration files and encapsulate information about system services, listening sockets, saved system state snapshots, and other objects that are relevant to the init system.
 

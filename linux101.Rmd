@@ -1613,6 +1613,65 @@ La forma de usar este comando es la siguiente:
 
 
 
+## Managing MBR And GPT Partitions
+##MBR
+
+![MBR_disk](img/basic-mbr-disk.jpg)
+
+The MBR holds the information on how the logical partitions, containing file systems, are organized on that medium. The MBR also contains executable code to function as a loader for the installed operating system—usually by passing control over to the loader's second stage, or in conjunction with each partition's volume boot record (VBR).  The organization of the partition table in the MBR limits the maximum addressable storage space of a disk to 2 TiB (232 × 512 bytes).
+
+##GPT
+
+![GPT_disk](img/basic-gpt-disk.jpg)
+
+GUID Partition Table (GPT) is a standard for the layout of the partition table on a physical storage device used in a desktop or server PC, such as a hard disk drive or solid-state drive, using globally unique identifiers (GUID). Although it forms a part of the Unified Extensible Firmware Interface (UEFI) standard (Unified EFI Forum proposed replacement for the PC BIOS), it is also used on some BIOS systems because of the limitations of master boot record (MBR) partition tables, which use 32 bits for storing logical block addresses (LBA) and size information on a traditionally 512-byte disk sector.
+
+![GPT_disk](img/filesystem.jpg)
+
+```
+#View all disk partition
+fdisk -l
+
+#View Specific Disk
+fdisk -l /dev/sdx
+
+#Delete partition
+fdisk /dev/sdx
+
+Command (m for help): d #Command delete
+Partition number (1-x): x #Number of partition
+Command (m for help): w #Write the table partition
+
+#Create partition
+fdisk /dev/sdx
+
+Command (m for help): n
+p
+w
+
+#Format partition
+mkfs.ext4 /dev/sdxy
+```
+
+##Utility parted
+
+```
+#Enter parted
+parted
+
+#Check disk
+print
+
+#Resize partition
+resizepart
+
+#Rescue partition
+rescue
+
+#Change partition flags
+set flags on/off
+```
+
 ## Customizing The Bash Shell
 
 ## SMB
@@ -1621,7 +1680,121 @@ La forma de usar este comando es la siguiente:
 
 ## Automating System Tasks With Cron and AT, Linux Security Topics, System Logging, Managing Printing
 
+# System Logging
 
+###¿Qué es un system log?
+
+> El archivo de registro del sistema contiene eventos registrados por
+> los componentes del sistema operativo. Estos eventos son a menudo
+> predeterminados por el propio sistema operativo. Los archivos de
+> registro del sistema pueden contener información sobre cambios de
+> dispositivos, controladores de dispositivos, cambios en el sistema,
+> eventos, operaciones y más.
+
+###¿Cómo veo los archivos de registro en linux?
+
+> Muchos archivos de registro valiosos son creados automáticamente por
+Linux. Puede encontrarlos en su directorio /var/log.
+
+###Nombres comunes de archivos de registro de Linux y uso
+
+
+
+> _/var/log/messages_ General message and system related stuff
+
+> _/var/log/auth.log_ : Authentication logs 
+
+> _/var/log/kern.log_ : Kernel logs
+
+> _/var/log/cron.log_ : Crond logs (cron job)
+
+> _/var/log/maillog_  : Mail server logs 
+
+> _/var/log/qmail/_   : Qmail log directory (more files inside this directory) 
+
+> _/var/log/httpd/_   : Apache access and error logs directory 
+
+> _/var/log/lighttpd/_: Lighttpd access and error logs directory
+
+> _/var/log/boot.log_ : System boot log
+
+> _/var/log/mysqld.log_ : MySQL database server log file 
+
+> _/var/log/secure /var/log/auth.log_ : Authentication log 
+
+> _/var/log/utmp /var/log/wtmp_ : Login records file
+
+> _/var/log/yum.log_  : Yum command log file.
+
+###JOURNALCTL
+
+> Since the release of Fedora 20, syslog has been replaced with the
+> Journal. The journal stores the same information as classic syslog and
+> running the ‘journalctl’ command will output a perfect copy of the
+> traditional syslog files from /var/log/ , but with improvements:
+> 
+
+>  - Lines of error priority (and higher) will be highlighted red. 
+
+>  - Lines of notice/warning priority will be highlighted bold. 
+
+>  - The timestamps are converted into your local time-zone. 
+
+>  - The output is auto-paged with your pager of choice (defaults to less). 
+
+>  - This will show all available data, including rotated logs. 
+
+>  - Between the output of each boot we’ll add a line clarifying that a new boot begins now.
+
+###Comandos journalctl
+
+> Los logs son visualizados por el usuario root o añadiendo sudo delante
+> de cada comando.
+
+>  - Ver todos los logs sin filtro:
+
+>    >  **journalctl**
+
+>  - Ver sólo los logs desde este inicio:
+
+>    > **journalctl -b**
+
+>  - Ver todos los logs filtrados por prioridad (“emerg”, “alert”, “crit”, “err”, “warning”, “notice”, “info”, “debug”):
+
+>    > **journalctl -p crit**
+
+>  - Ver todos los logs de errores sólo de este arranque:
+
+>    > **journalctl -b -p err**
+
+>  - Ver logs por servicio:
+
+>    > **journal -u tomcat**
+
+>  - Ver logs por servicio y seguir la traza mientras crece el archivo:
+
+>    > **journal -u tomcat -f**
+
+>  - Ver logs por PID:
+
+>    > **pidof bluetoothd**
+>    > **journal _PID=864**
+
+>  - Ver logs por timestamp:
+
+>    > **journalctl --since=2017-09-18 journalctl --since=2017-09-18 --until=“2017-09-19 13:00:00”**
+
+>  - Ver logs por servicio y timestamp:
+
+>    > **journalctl -u tomcat.service --since=19:30 --until=20:30**
+
+>  - Ver logs generados por un ejecutable:
+
+>    > **journalctl /usr/sbin/anacron**
+
+>  - Ver logs del kernel:
+
+>    > **journalctl -k**
 
 ## AT
 

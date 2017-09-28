@@ -1678,7 +1678,100 @@ set flags on/off
 
 ## Introduction To Bash Scripting And Linux Automation
 
-## Automating System Tasks With Cron and AT, Linux Security Topics, System Logging, Managing Printing
+## Automating System Tasks With Cron and AT, Linux Security Topics, System Logging,
+
+
+## Managing Printing
+
+There is two major modules to provide UNIX-like systems with printing capabilities
+* **CUPS** which stands for Common UNIX Printing System
+* **LPRng** whch stands for Line Printing
+
+Both system modules will turn the hosting machine into a printer server which
+can provide service locally and over the network.
+
+Although both modules provide the same functionality, this one is achieved
+differently while the CUPS module works over the  Internet Printing Protocol (IPP) and
+also LPRng support and other printing systems,
+the LPRng module works over the Line Printer Deamon protocol and supports the
+ Berkeley printing system.
+
+You can pick one of the above depending on your requirements.
+CUPS is the default in various systems, we will provide the
+the following instructions assuming a fedora 25 instance is being used.
+
+**Installing**
+
+Check your package distributor for the latest available implementation
+or get it directly from its official repository:
+
+`https://github.com/apple/cups/releases`
+
+ * Check for existing packages
+
+`dnf list | grep cups`
+
+* Install them if missing
+
+`sudo dnf install cups`
+
+There's also a config tool, depending on your distribution this may come
+with a different name:
+
+`dnf install system-config-printer`
+
+**Usage**
+
+ Once you get a printing module system, all the provided functionality will be
+ available through the next command routines:
+
+ * `lpr` - Print a file
+ * `lpq` - View the print queue
+ * `lprm` - Remove a print job from the queue
+
+ Consider that, depending on your chosen printing system, those command
+ may require a different set of parameters. Man pages can provide a detailed
+ insight on this matter.
+
+ Common tasks
+
+ * Print a file:
+
+   `$ lpr -P printername testfile`
+
+ * List all print jobs waiting
+   to be printed:
+
+   `$ lpq -a`
+
+ * Cancel one or more
+   print jobs. (Use `lpq` to learn the ID of the desired print jobs):
+
+   `$ lprm -P printername 42 00 `
+
+ **Install a CUPS-PDF printer**
+
+ If there's no local nor over network available printer, you can set up a
+ virtual one that will print up your documents as PDF in your desktop
+
+ * Install a CUPS-Pdf printer in fedora, a printer called Cups-PDF will be added:
+
+ `$ dnf install cups-pdf`
+
+ * Create a simple document to be printed:
+
+ `$ echo "Hola Mundo" > print.txt`
+
+ * Print your file:
+
+ `$ lpr -P Cups-PDF print.txt `
+
+ ![console steps](img/printerJob.png)
+
+ Go to your Desktop and find your printed PDF document
+
+ ![generated printed pdf](img/pdfGenerated.png)
+
 
 # System Logging
 

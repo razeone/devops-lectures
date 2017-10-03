@@ -1247,14 +1247,14 @@ service vsftpd start
 There are three types of SELinux modes; they are as follows:
 
 * *Enforcing*: In this mode, SELinux enforces its policies onto the system and makes sure that all access by unauthorized users or processes are denied. These access
-denial events are also logged in to the system as well, which we will look into later
-on in this chapter.
+  denial events are also logged in to the system as well, which we will look into later
+  on in this chapter.
 
 * *Permissive*: This is like a semi-enabled mode state where SELinux doesn’t deny any
-access as the policies are in permissive mode. This is the best mode to test the
-SELinux policies.
+  access as the policies are in permissive mode. This is the best mode to test the
+  SELinux policies.
 * *Disabled*: In this mode, the SELinux is in a completely disabled state and no logs are
-created or permissions are denied.
+  created or permissions are denied.
 
 Get the current status.
 
@@ -1540,6 +1540,200 @@ Now after a succesful login, the user will be prompted requesting a new password
 
 ## Upstart, Systemd, Managing MBR And GPT Partitions, Commands And Compression, Booting The System
 
+# Compresion de Archivos
+## tar
+El comando "TAR" es utilizado normalmente para empaquetar, desempaquetar comprimir y descomprimir archivos.
+La forma de usar este comando es la siguiente:
+
+# Linux boot process.
+
+
+![](http://static.thegeekstuff.com/wp-content/uploads/2011/02/linux-boot-process.png)
+
+**1. BIOS**
+
+    BIOS stands for Basic Input/Output System
+    Performs some system integrity checks
+    Searches, loads, and executes the boot loader program.
+    
+**2. MBR MBR stands for Master Boot Record.**
+
+    MBR loads and executes the GRUB boot loader.
+    It is located in the 1st sector of the bootable disk. Typically /dev/hda, or /dev/sda
+    MBR is less than 512 bytes in size. This has three components 1) primary boot loader info in 1st 446 bytes 2) partition table info in next 64 bytes 3) mbr validation check in last 2 bytes.
+    It contains information about GRUB (or LILO in old systems).
+
+**3. GRUB**
+
+    GRUB stands for Grand Unified Bootloader.
+    If you have multiple kernel images installed on your system, you can choose which one to be executed.
+    GRUB displays a splash screen, waits for few seconds, if you don’t enter anything, it loads the default kernel image as specified in the grub configuration file.
+
+**4. Kernel**
+
+    Mounts the root file system as specified in the “root=” in grub.conf
+    Kernel executes the /sbin/init program
+    Since init was the 1st program to be executed by Linux Kernel, it has the process id (PID) of 1. Do a ‘ps -ef | grep init’ and check the pid.
+    initrd stands for Initial RAM Disk.
+    
+**5. Init**
+
+    Looks at the /etc/inittab file to decide the Linux run level.
+    Following are the available run levels
+        0 – halt
+        1 – Single user mode
+        2 – Multiuser, without NFS
+        3 – Full multiuser mode
+        4 – unused
+        5 – X11
+        6 – reboot
+    Init identifies the default initlevel from /etc/inittab and uses that to load all appropriate program.
+    Execute ‘grep initdefault /etc/inittab’ on your system to identify the default run level
+
+**6. Runlevel programs**
+
+    When the Linux system is booting up, you might see various services getting started. For example, it might say “starting sendmail …. OK”. Those are the runlevel programs, executed from the run level directory as defined by your run level.
+    Depending on your default init level setting, the system will execute the programs from one of the following directories.
+        Run level 0 – /etc/rc.d/rc0.d/
+        Run level 1 – /etc/rc.d/rc1.d/
+        Run level 2 – /etc/rc.d/rc2.d/
+        Run level 3 – /etc/rc.d/rc3.d/
+        Run level 4 – /etc/rc.d/rc4.d/
+        Run level 5 – /etc/rc.d/rc5.d/
+        Run level 6 – /etc/rc.d/rc6.d/
+
+
+```
+[BASH]# tar [parametros] [fichero1] [fichero2]
+```
+Los parametros que puedes usar son:
+
+  - c Crea un fichero tar
+
+  - v Modo Verbose
+  - x Extrae los archivos (descomprime los ficheros que se encuentran dentro del archivo tar)
+  - z Comprime el archivo tar con gzip
+  - j Comprime el archivo tar bzip
+  - f Usar este parametro combinado con el parametro **c** se especifica que se utilizara el nombre del archivo especificado para la creación del archivo tar
+  - C Indica el PATH donde sera extraido el contenido
+
+
+#### Empaquetar un fichero  con TAR
+```
+[BASH]# tar -cvf fichero.tar ficheroAComprimir
+```
+
+#### Desempaquetar un fichero TAR
+```
+[BASH]# tar -xvf fichero.tar
+```
+
+#### Comprimir un fichero con TAR.GZ
+```
+[BASH]# tar -czvf fichero.tar.gz ficheroAComprimir
+```
+
+#### Descomprimir un fichero TAR.GZ
+```
+[BASH]# tar -xzvf fichero.tar.gz
+```
+
+#### Comprimir un fichero con TAR.BZ
+```
+[BASH]# tar -cjvf fichero.tar.bz ficheroAComprimir
+```
+
+#### Descomprimir un fichero TAR.BZ
+```
+[BASH]# tar -xvf fichero.tar.bz
+```
+
+#### Descomprimir un fichero TAR.GZ en un PATH especifico
+```
+[BASH]# tar -xzvf tomcat.tar.gz -C /opt/
+```
+
+## zip
+La forma de usar este comando es la siguiente:
+```
+[BASH]# zip [parametros]
+```
+
+#### Comprimir un fichero con ZIP
+```
+[BASH]# zip archivo.zip ficheros
+```
+
+#### Descomprimir un fichero ZIP
+```
+[BASH]# unzip archivo.zip
+```
+#### rar
+
+El comando "rar" es utilizado normalmente para empaquetar y comprimir archivos.
+
+Para instalar rar
+```   
+sudo apt-get install rar
+```
+
+Para comprimir en formato rar, se usara el siguiente comando:
+```
+rar -a archivo.rar ficheros
+```
+
+#### unrar
+
+El comando "rar" es utilizado normalmente para desempaqueter, descomprimir y ver el comtenido de archivos.
+
+Para istalar unrar 
+```
+sudo apt-get install unrar –fix-missing
+```
+
+Para descomprimir ficheros en formato rar, se utiliza el siguiente comando:
+```
+unrar -x archivo.rar
+```
+
+Para ver el contenido de un fichero rar, se usa el siguiente comando:
+```
+unrar -v archivo.rar
+unrar -l archivo.rar 
+```
+
+#### 7zip
+
+Para Instlar 7zip
+```
+yum install p7zip
+```
+
+Para comprimir 
+```
+7za a myfiles.7z myfiles/
+```
+
+Pra descomprimir .7z
+```
+7za e myfiles.7z  
+- 7za – Nombre del comando 
+```
+
+## Parametros para 7za 
+```
+  * a: Añadir archivos 
+  * d: Eliminar archivos del paquete
+  * e: Extraer archivos del paquete (sin usar nombres de directorio)
+  * i: Mostrar información sobre los formatos compatibles
+  * l: Listar el contenido del archivo
+  * rn: Renombrar archivos en archivo
+  * t: Comprobar la integridad del archivo
+  * u: Actualizar archivos al paquete
+  * x: archivos eXtract con rutas completas
+```
+
+
 ## Managing MBR And GPT Partitions
 ##MBR
 
@@ -1598,27 +1792,373 @@ rescue
 #Change partition flags
 set flags on/off
 ```
+## Systemd
+Systemd is an init system used in Linux distributions to bootstrap the user space. It is a replacement for the UNIX System V and Berkeley Software Distribution (BSD) init systems. The goal is unification of basic Linux configurations and service behaviors across all distributions.
 
-## Customizing The Bash Shell
+It has three general functions:
 
-## SMB
+* A system and service manager
+* A software plataform
+* The glue between applications and the kernel
 
-## Introduction To Bash Scripting And Linux Automation
+Systemd is not just the name of the init daemon but also refers to the entire software bundle around it, which, in addition to the systemd init daemon, includes the daemons journald, logind and networkd, and many other low-level components.
 
-## Automating System Tasks With Cron and AT, Linux Security Topics, System Logging, Managing Printing
 
-## Host Security, 
+## Managing Printing
 
-## User Interfaces and Desktops (X Server/XWindows), 2015 Objective Updates / bash shell, Administrative Tasks, Log FIles, Networking, LightDM, Security
+There is two major modules to provide UNIX-like systems with printing capabilities
+* **CUPS** which stands for Common UNIX Printing System
+* **LPRng** whch stands for Line Printing
 
-## Introduction to Red Hat Certified Engineer, System configuration and management, Network services
+Both system modules will turn the hosting machine into a printer server which
+can provide service locally and over the network.
 
-## (subnetting, routing, vpn y troubleshooting)
+Although both modules provide the same functionality, this one is achieved
+differently while the CUPS module works over the  Internet Printing Protocol (IPP) and
+also LPRng support and other printing systems,
+the LPRng module works over the Line Printer Deamon protocol and supports the
+ Berkeley printing system.
 
-## Python para sysops (scripting & boto)
+You can pick one of the above depending on your requirements.
+CUPS is the default in various systems, we will provide the
+the following instructions assuming a fedora 25 instance is being used.
 
-## Conceptos (consistencia, backup, vaulting , full vs incremental , persistencia & rotacion, etc.)
+**Installing**
 
-## Herramientas y metodos ( dumps, scripting, snapshots, , s3,glacier, rds, etc)
+Check your package distributor for the latest available implementation
+or get it directly from its official repository:
+
+`https://github.com/apple/cups/releases`
+
+ * Check for existing packages
+
+`dnf list | grep cups`
+
+* Install them if missing
+
+`sudo dnf install cups`
+
+There's also a config tool, depending on your distribution this may come
+with a different name:
+
+`dnf install system-config-printer`
+
+**Usage**
+
+ Once you get a printing module system, all the provided functionality will be
+ available through the next command routines:
+
+ * `lpr` - Print a file
+ * `lpq` - View the print queue
+ * `lprm` - Remove a print job from the queue
+
+ Consider that, depending on your chosen printing system, those command
+ may require a different set of parameters. Man pages can provide a detailed
+ insight on this matter.
+
+ Common tasks
+
+ * Print a file:
+
+   `$ lpr -P printername testfile`
+
+ * List all print jobs waiting
+   to be printed:
+
+   `$ lpq -a`
+
+ * Cancel one or more
+   print jobs. (Use `lpq` to learn the ID of the desired print jobs):
+
+   `$ lprm -P printername 42 00 `
+
+ **Install a CUPS-PDF printer**
+
+ If there's no local nor over network available printer, you can set up a
+ virtual one that will print up your documents as PDF in your desktop
+
+ * Install a CUPS-Pdf printer in fedora, a printer called Cups-PDF will be added:
+
+ `$ dnf install cups-pdf`
+
+ * Create a simple document to be printed:
+
+ `$ echo "Hola Mundo" > print.txt`
+
+ * Print your file:
+
+ `$ lpr -P Cups-PDF print.txt `
+
+ ![console steps](img/printerJob.png)
+
+ Go to your Desktop and find your printed PDF document
+
+ ![generated printed pdf](img/pdfGenerated.png)
+
+
+# System Logging
+
+###¿Qué es un system log?
+
+> El archivo de registro del sistema contiene eventos registrados por
+> los componentes del sistema operativo. Estos eventos son a menudo
+> predeterminados por el propio sistema operativo. Los archivos de
+> registro del sistema pueden contener información sobre cambios de
+> dispositivos, controladores de dispositivos, cambios en el sistema,
+> eventos, operaciones y más.
+
+###¿Cómo veo los archivos de registro en linux?
+
+> Muchos archivos de registro valiosos son creados automáticamente por
+Linux. Puede encontrarlos en su directorio /var/log.
+
+###Nombres comunes de archivos de registro de Linux y uso
+
+
+
+> _/var/log/messages_ General message and system related stuff
+
+> _/var/log/auth.log_ : Authentication logs 
+
+> _/var/log/kern.log_ : Kernel logs
+
+> _/var/log/cron.log_ : Crond logs (cron job)
+
+> _/var/log/maillog_  : Mail server logs 
+
+> _/var/log/qmail/_   : Qmail log directory (more files inside this directory) 
+
+> _/var/log/httpd/_   : Apache access and error logs directory 
+
+> _/var/log/lighttpd/_: Lighttpd access and error logs directory
+
+> _/var/log/boot.log_ : System boot log
+
+> _/var/log/mysqld.log_ : MySQL database server log file 
+
+> _/var/log/secure /var/log/auth.log_ : Authentication log 
+
+> _/var/log/utmp /var/log/wtmp_ : Login records file
+
+> _/var/log/yum.log_  : Yum command log file.
+
+###JOURNALCTL
+
+> Since the release of Fedora 20, syslog has been replaced with the
+> Journal. The journal stores the same information as classic syslog and
+> running the ‘journalctl’ command will output a perfect copy of the
+> traditional syslog files from /var/log/ , but with improvements:
+> 
+
+>  - Lines of error priority (and higher) will be highlighted red. 
+
+>  - Lines of notice/warning priority will be highlighted bold. 
+
+>  - The timestamps are converted into your local time-zone. 
+
+>  - The output is auto-paged with your pager of choice (defaults to less). 
+
+>  - This will show all available data, including rotated logs. 
+
+>  - Between the output of each boot we’ll add a line clarifying that a new boot begins now.
+
+###Comandos journalctl
+
+> Los logs son visualizados por el usuario root o añadiendo sudo delante
+> de cada comando.
+
+>  - Ver todos los logs sin filtro:
+
+>    >  **journalctl**
+
+>  - Ver sólo los logs desde este inicio:
+
+>    > **journalctl -b**
+
+>  - Ver todos los logs filtrados por prioridad (“emerg”, “alert”, “crit”, “err”, “warning”, “notice”, “info”, “debug”):
+
+>    > **journalctl -p crit**
+
+>  - Ver todos los logs de errores sólo de este arranque:
+
+>    > **journalctl -b -p err**
+
+>  - Ver logs por servicio:
+
+>    > **journal -u tomcat**
+
+>  - Ver logs por servicio y seguir la traza mientras crece el archivo:
+
+>    > **journal -u tomcat -f**
+
+>  - Ver logs por PID:
+
+>    > **pidof bluetoothd**
+>    > **journal _PID=864**
+
+>  - Ver logs por timestamp:
+
+>    > **journalctl --since=2017-09-18 journalctl --since=2017-09-18 --until=“2017-09-19 13:00:00”**
+
+>  - Ver logs por servicio y timestamp:
+
+>    > **journalctl -u tomcat.service --since=19:30 --until=20:30**
+
+>  - Ver logs generados por un ejecutable:
+
+>    > **journalctl /usr/sbin/anacron**
+
+>  - Ver logs del kernel:
+
+>    > **journalctl -k**
+
+## AT
+
+The **at** command schedules a command to be run once at a particular time that you normally have permission to run.
+
+You start by running the **at** command at the command line, passing it the scheduled time as the option.  It then places you at a special prompt, where you can type in the command (or series of commands) to be run at the scheduled time. When you're done, press **Control-D** on a new line, and your command will be placed in the queue.
+
+```sh
+at 9:30 PM Tue
+```
+
+```shell
+at> echo "Hola Mundo, son las 9:30 pm."
+at> ^D
+job 1 at Tue Sept 26 09:30:00 2017
+```
+
+You can use the program **atq** to view your currently-queued **at** jobs. Type **atq** to display the queue.
+
+```Shell
+atq
+```
+
+```shell
+1      Fri Oct 22 09:48:00 2017 a user
+```
+
+This information is, from left to right: **job number**, **date**, **hour**, **year**, **queue**, and **username**.
+
+### Remove/Delete a scheduled at job using atrm
+
+You can use atrm command ( or **at -d** ), to delete a particular job. For example, to delete the job number 4, use the following atrm command.
+
+```
+atrm 4
+```
+
+### Additional Command Line Options
+
+Additional command line options for **at** and `batch` include:
+
+| Option | Description                              |
+| ------ | ---------------------------------------- |
+| `-f`   | Read the commands or shell script from a file instead of specifying them at the prompt. |
+| `-m`   | Send email to the user when the job has been completed. |
+| `-v`   | Display the time that the job will be executed. |
+
+## Crontab
+
+The **crontab** is a list of commands that you want to run on a regular schedule, and also the name of the command used to manage that list.
+
+**crontab** stands for "cron table," because it uses the job scheduler **cron** to execute tasks; **cron** itself is named after "<u>chronos</u>," the Greek word for time.
+
+To edit the crontab, use this command:
+
+```shell
+crontab -e
+```
+
+The default crontab file looks like this:
+
+```Shell
+
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+#·
+# For more information see the manual pages of crontab(5) and cron(8)
+#·
+# m h  dom mon dow   command
+```
+
+The information you must include is (in order of appearance):
+
+1. A number (or list of numbers, or range of numbers), *m*, representing the minute of the hour;
+2. A number (or list of numbers, or range of numbers), *h*, representing the hour of the day;
+3. A number (or list of numbers, or range of numbers), *dom*, representing the day of the month;
+4. A number (or list, or range), or name (or list of names), *mon*, representing the month of the year;
+5. A number (or list, or range), or name (or list of names), *dow*, representing the day of the week; and
+6. *command*, which is the command to be run, exactly as it would appear on the command line.
+
+An example of crontab format with commented fields is as follows:
+
+```Shell
+# Minute   Hour   Day of Month       Month          Day of Week        Command    
+# (0-59)  (0-23)     (1-31)    (1-12 or Jan-Dec)  (0-6 or Sun-Sat)                
+    0        2          12             *                *            /usr/bin/find
+```
+
+To view your crontab, you can use this command:
+
+```shell
+crontab -v
+```
+
+To view your crontab entries type crontab -l from your linux:
+
+```shell
+crontab -l
+```
+
+
+## Systemd Units
+Systemd introduces the concept of systemd units. These units are represented by unit configuration files and encapsulate information about system services, listening sockets, saved system state snapshots, and other objects that are relevant to the init system.
+
+```
+Unit Types
+Service unit:		.service    A system service
+Target unit:	    .target	    A group of systemd units
+Automount unit:	    .automount	A file system automount point
+Device unit:	   	.device	    A device file recognized by the kernel
+Mount unit:		    .mount	    A file system mount point
+Path unit:		    .path       A file or directory in a file system
+Scope unit:		    .scope      An externally created process
+Slice unit:		    .slice      A group of hierarchically organized 
+                                units that manage system processes
+Snapshot unit:	    .snapshot	A saved state of the systemd manager
+Socket unit:		.socket	    An inter-process communication socket
+Swap unit:		    .swap       A swap device or swap file
+Timer unit:		    .timer	    A systemd timer
+```
+
+##Systemd Unit Files Locations
+```
+/usr/lib/systemd/system/    Systemd unit files distributed with installed
+                            RPM packages
+/run/systemd/system/        Systemd unit files created at run time.
+/etc/systemd/system/        Systemd unit files created by system 
+                            enable as well as unit files added for
+                            extending a service.
+```
+
+##Systemd Cheatsheet
+```shell
+# To start a service
+systemctl start [name.service]
+# To stop a service
+systemctl stop [name.service]
+# To restart a service
+systemctl restart [name.service]
+# To reload a service
+systemctl reload [name.service]
+# To review a service status
+systemctl status [name.service]
+# To see if a service is active
+systemctl is-active [name.service]
+# To see all services
+systemctl list-units --type service --all
+```
 
 ## Conceptos y mongodb

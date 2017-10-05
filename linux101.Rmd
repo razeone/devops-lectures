@@ -2162,3 +2162,67 @@ systemctl list-units --type service --all
 ```
 
 ## Conceptos y mongodb
+
+#Remote Desktop and VNC
+
+**Install VNC Server. **
+
+ [root@itxh~]# dnf -y install tigervnc-server
+ 
+** If Firewalld is running, allow VNC service. **
+ 
+ [root@itxh~]# firewall-cmd --add-service=vnc-server --permanent
+success
+
+**If Firewalld is running, allow VNC service. **
+
+[root@itxh~]# firewall-cmd --reload
+success 
+
+**Login as a user you'd like to configure VNC connection and set like follows. **
+
+** set VNC password**
+
+[fedora@itxh~]$ vncpasswd
+
+Password:
+Verify:
+Would you like to enter a view-only password (y/n)? n
+
+**start VNC server**
+
+[fedora@itxh~]$ vncserver :1 -geometry 800x600 -depth 24
+
+xauth:  file /home/fedora/.Xauthority does not exist
+
+New 'dlp.srv.world:1 (fedora)' desktop is dlp.srv.world:1
+
+Creating default startup script /home/fedora/.vnc/xstartup
+Starting applications specified in /home/fedora/.vnc/xstartup
+Log file is /home/fedora/.vnc/dlp.srv.world:1.log
+
+**stop VNC server**
+
+[fedora@itxh~]$ vncserver -kill :1
+
+**Killing Xvnc process ID 23691**
+
+[fedora@itxh~]$ vi ~/.vnc/xstartup
+
+**End line: comment out and add like follows**
+exec /etc/X11/xinit/xinitrc
+exec /usr/bin/mate-session
+
+**start with diplay number '1', screen resolution '800x600', color depth '24'**
+
+[fedora@itxh~]$ vncserver :1 -geometry 800x600 -depth 24
+
+**Install VNC viewer on client computer, this example in on Windows 10.
+Download from the site below to install UltraVNC.**
+
+
+![](https://www.server-world.info/en/Fedora_25/desktop/img/17.png)
+
+![](https://www.server-world.info/en/Fedora_25/desktop/img/18.png)
+
+![](https://www.server-world.info/en/Fedora_25/desktop/img/19.png)

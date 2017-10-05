@@ -2162,3 +2162,91 @@ systemctl list-units --type service --all
 ```
 
 ## Conceptos y mongodb
+
+## Samba
+
+Samba son un conjunto de aplicaciones para Linux, que implementan el protocolo de comunicación SMB utilizado por los sistemas operativos Microsoft Windows para compartir carpetas e impresoras.
+
+Básicamente samba permite a PCs que utilizan Linux, conectarse a carpetas compartidas en PCs con Windows.
+
+# Instalación de samba
+Samba se compone de varios paquetes. Se pueden localizar en http://packages.ubuntu.com buscando 'samba'. Destacamos los más importantes:
+
+    - samba 		Servidor de archivos e impresoras tipo LanManager para Unix.
+    - samba-common	Archivos comunes de samba utilizados para clientes y servidores.
+    - smbclient 	Cliente simple tipo LanManager para Unix.
+    - swat 		Herramienta de administración de Samba via web
+    - samba-doc 	Documentación de Samba.
+    - smbfs 		Comandos para montar y desmontar unidades de red samba
+    - winbind 		Servicio para resolver información de usuarios y grupos de servidores Windows NT
+
+```
+    # sudo apt-get install samba samba-common smbclient samba-doc smbfs
+```
+
+#Configuración de samba
+El archivo de configuración se divide en secciones identificadas por un nombre entre corchetes. Hay tres secciones especiales que son 
+- [global]
+- [homes]
+- [printers]
+
+```
+# /etc/samba/smb.conf
+```
+
+   - La sección principal es la sección [global] que nos permite configurar los parámetros generales del servicio.
+```
+[global]
+   workgroup = contabilidad 
+   server string = Servidor Samba
+   keep alive = 30
+   printing = bsd 
+   printcap name = /etc/printcap
+   load printers = yes
+   print command = /usr/bin/lpr -r -P%p %s
+   lpq command = /usr/bin/lpq -P%p
+   lprm command = /usr/bin/lprm -P%p %j   
+   preserve case = yes
+   short preserve case = yes 
+   case sensitive = no
+   log file = /var/log/samba/log.%m
+   max log size = 50
+   security = user
+   socket options = TCP_NODELAY 
+   local master = no 
+```
+   - La sección [homes] nos permitirá compartir las carpetas home de cada usuario.
+   - La sección [printers] nos permitirá compartir impresoras.
+```
+[printers]
+  comment = Todas las impresoras   --Comentarios adicionales de la sección 
+  browseable = yes             -- Permite a los usuarios elegir impresora 
+  printable = yes              -- Indica que esta sección es de Impresión, mas no de archivos. 
+  public = no                 -- Parámetro para resguardar seguridad. 
+  read only = yes             -- Parámetro de seguridad para que otros usuarios no pueden eliminar trabajos.
+  create mode = 0700  -- Los permisos de acceso (en Unix) que serán otorgados al crear un archivo.  
+  directory = /tmp   -- Especifica donde se guardan los archivos temporales de impresión. 
+```
+
+# Para unir al dominio PCs con Windows 2000 ó Windows XP
+Es necesario previamente crear en el servidor samba una cuenta de usuario para el equipo a unir. 
+
+```
+#useradd -g 100 -d [username]$ && passwd -l [username]$ && smbpasswd -a -m [username]
+```
+    Opciones useradd:
+
+        -g: indica el grupo inicial de dicho usuario. 100 corresponde al grupo 'users'
+        -d: indica la carpeta home del usuario
+
+    Opciones passwd:
+
+        -l: indica que el password del usuario quede bloqueado para que nadie pueda hacer login con ese nombre de usuario
+
+    Opciones smbpasswd:
+
+        -a: indica que añada al usuario
+        -m: indica que es una cuenta de máquina (equipo)
+```
+
+

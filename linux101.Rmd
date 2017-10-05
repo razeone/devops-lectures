@@ -2194,7 +2194,7 @@ Then go to the easy-rsa directory and edit the vars file
 cd /etc/openvpn/easy-rsa/2.*/
 vim vars
 ```
-![openvpn](img/openvpn.png)
+![openvpn](img/Openvpn.png)
 
 Now it is time to generate the new keys and certificate for our instalation.
 ```
@@ -2211,28 +2211,28 @@ This command will create a file ca.crt and ca.key in the directory /etc/openvpn/
 ```
 ./build-ca
 ```
-![openvpn](img/openvpn1.png)
+![openvpn](img/Openvpn1.png)
 
 ####Step 2 - Now generate a server key and certificate
 Run the command "build-key-server server" in the current directory
 ```
 ./build-key-server server
 ```
-![openvpn](img/openvpn2.png)
+![openvpn](img/Openvpn2.png)
 
 ####Step 3 - Build a Pelacuas key exchange.
 Execute the build-dh command
 ```
 ./build-dh
 ```
-![openvpn](img/openvpn3.png)
+![openvpn](img/Openvpn3.png)
 
 please wait, it will take some time to generate the the files. The time depends on the KEY_SIZE you have the settings on the file vars.
 ####Step 4 - Generate client key and certificate.
 ```
 ./build-key client
 ```
-![openvpn](img/openvpn3.png)
+![openvpn](img/Openvpn3.png)
 
 ####Step 5 - Move or copy the directory `keys/` to `/etc/opennvpn`
 ```
@@ -2359,7 +2359,7 @@ key client.key
 ns-cert-type server
 comp-lzo
 ```
-![openvpn](img/openvpn5.png)
+![openvpn](img/Openvpn5.png)
 
 And save it.
 Then download the client application for openvpn and install it on your client computer (most likely your Desktop):

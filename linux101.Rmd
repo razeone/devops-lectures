@@ -1555,7 +1555,7 @@ La forma de usar este comando es la siguiente:
     BIOS stands for Basic Input/Output System
     Performs some system integrity checks
     Searches, loads, and executes the boot loader program.
-    
+
 **2. MBR MBR stands for Master Boot Record.**
 
     MBR loads and executes the GRUB boot loader.
@@ -1575,7 +1575,7 @@ La forma de usar este comando es la siguiente:
     Kernel executes the /sbin/init program
     Since init was the 1st program to be executed by Linux Kernel, it has the process id (PID) of 1. Do a ‘ps -ef | grep init’ and check the pid.
     initrd stands for Initial RAM Disk.
-    
+
 **5. Init**
 
     Looks at the /etc/inittab file to decide the Linux run level.
@@ -1910,7 +1910,7 @@ with a different name:
 ###¿Cómo veo los archivos de registro en linux?
 
 > Muchos archivos de registro valiosos son creados automáticamente por
-Linux. Puede encontrarlos en su directorio /var/log.
+> Linux. Puede encontrarlos en su directorio /var/log.
 
 ###Nombres comunes de archivos de registro de Linux y uso
 
@@ -1948,7 +1948,7 @@ Linux. Puede encontrarlos en su directorio /var/log.
 > Journal. The journal stores the same information as classic syslog and
 > running the ‘journalctl’ command will output a perfect copy of the
 > traditional syslog files from /var/log/ , but with improvements:
-> 
+>
 
 >  - Lines of error priority (and higher) will be highlighted red. 
 
@@ -2161,8 +2161,6 @@ systemctl is-active [name.service]
 systemctl list-units --type service --all
 ```
 
-## Conceptos y mongodb
-
 #How to install OpenVPN Server and Client on CentOS 7
 
 ##Enable the epel-repository
@@ -2370,3 +2368,563 @@ or use terminal
 ```
 sudo openvpn --config client.ovpn
 ```
+
+#Subnetting
+
+**IP Address**
+
+An IP address identifies as single device within a network,
+this is useful when delivering or providing content.
+
+In the IPv4 this address is defined by a 32bit number which is
+divided in groups of 8 for readability, for example:
+
+`00000001.00000001.00000001.00000001`   32 bits
+
+`1.1.1.1`                               decimal representation
+
+To provide a scheme that supports large and small networks,
+these addresses are classified in 5 major classes using their
+most significant bits:
+
+
+![IPClasses](img/classes.gif)
+
+**Network Mask**
+
+A network mask is used to identify which part of an address identifies the network and
+which identifies the device.
+Classes A,B and C have their natural masks:
+
+Class A: `255.0.0.0`
+
+Class B: `255.255.0.0`
+
+Class C: `255.255.255.0`
+
+To find the network address use their binary representations,
+for example:
+
+`8.20.15.1 = 00001000.00010100.00001111.00000001`
+
+`255.0.0.0 = 11111111.00000000.00000000.00000000`
+
+The address numbers matching all-ones in its mask, describe the network ID
+
+The address numbers matching all-zeros in its mas, describe the device ID
+
+`netid =  00001000 = 8`
+
+`hostid = 00010100.00001111.00000001 = 20.15.1`
+
+
+**Subnetting**
+
+A subnet is a network allocated within a network and provides
+ isolation, order and coherence within a network. This is useful
+ for security reasons and also to describe business logic.
+
+To create subnet we increase the ones in a mask by taking bits from the
+device segment in a IP address:
+
+
+`204.17.5.0 -      11001100.00010001.00000101.00000000`
+
+`255.255.255.224 - 11111111.11111111.11111111.11100000`
+
+`-----------------------------net------------|sub|---- `
+
+This will enable the creation of multiple subnets with a their
+device addresses (the first and last are not available)
+
+`204.17.5.0 255.255.255.224     host address range 1 to 30`
+
+`204.17.5.32 255.255.255.224    host address range 33 to 62`
+
+`204.17.5.64 255.255.255.224    host address range 65 to 94`
+
+`204.17.5.96 255.255.255.224    host address range 97 to 126`
+
+`204.17.5.128 255.255.255.224   host address range 129 to 158`
+
+`204.17.5.160 255.255.255.224   host address range 161 to 190`
+
+`204.17.5.192 255.255.255.224   host address range 193 to 222`
+
+`204.17.5.224 255.255.255.224   host address range 225 to 254`
+
+
+
+**Notation**
+
+There is two options to describe a network with its mask:
+
+The first one `204.17.5.32 255.255.255.224` by writing address and mask
+
+The second one `204.17.5.32/27` by writing address slash and the number of
+ones in the mask, this is called CIDR notation.
+
+
+**VLSM**
+
+When applying the same subnetwork mask to all new subnets all of them
+will have the same number of address this yields a waste lots
+of host addresses as not all subnets will have the same number of devices
+
+Given the network 204.15.5.0/24 suppose the next requirements are given
+
+`netA: must support 14 hosts`
+
+`netB: must support 28 hosts`
+
+`netC: must support 2 hosts`
+
+`netD: must support 7 hosts`
+
+`netE: must support 28 host`
+
+Determine the appropriate mask
+
+`netA: requires a /28 (255.255.255.240) mask to support 14 hosts`
+
+`netB: requires a /27 (255.255.255.224) mask to support 28 hosts`
+
+`netC: requires a /30 (255.255.255.252) mask to support 2 hosts`
+
+`netD: requires a /28 (255.255.255.240) mask to support 7 hosts`
+
+`netE: requires a /27 (255.255.255.224) mask to support 28 hosts`
+
+
+First assign the biggest subnet
+
+`netB: 204.15.5.0/27  host address range 1 to 30`
+
+`netE: 204.15.5.32/27 host address range 33 to 62`
+
+`netA: 204.15.5.64/28 host address range 65 to 78`
+
+`netD: 204.15.5.80/28 host address range 81 to 94`
+
+`netC: 204.15.5.96/30 host address range 97 to 98`
+
+This yields to a better usage and allow future usage for the remaining
+addresses
+
+
+**Classless Inter-Domain Routing**
+
+CIDR, lefts behind the idea of having A,B,C... IP types,
+by using the slash representation IP/XX  a new approach of hierarchy
+where each domain gets their IPs from a higher level, then higher levels can
+group or abstract its descendants into a single address.
+
+For example: An IPS holds the network `172.16.0.0/16` and servers their clientes
+using subnets `172.16.1.0/24, 172.16.2.0/24` ans so on. But when it comes to
+direct content to external networks, it can advertise using a single address
+`172.16.0.0/16` without disrupting its whole infrastructure.
+
+
+## Host Security
+
+### Hardening
+
+In computing, **hardening** is usually the process of securing a system by reducing its surface of vulnerability. A system has a larger vulnerability surface the more that it does; in principle a single-function system is more secure than a multipurpose one. Reducing available vectors of attack typically includes the removal of unnecessary software, unnecessary usernames or logins and the disabling or removal of unnecessary services.
+
+#### Hide GRUB
+
+Fedora uses the GRUB2 bootloader. By default, a menu is shown to the user for 5 seconds at system boot.
+
+To hide this menu, add the following lines to `/etc/default/grub`:
+
+```shell
+GRUB_TIMEOUT=0
+GRUB_HIDDEN_TIMEOUT=1
+GRUB_HIDDEN_TIMEOUT_QUIET=true
+```
+
+Optionally, you can also disable the graphical appearance by adding this line:
+
+```shell
+GRUB_TERMINAL=console
+```
+
+You then need to update the GRUB2 configuration file. This is usually located at`/boot/grub2/grub.cfg`. On UEFI-enabled systems, it’s probably located at`/boot/efi/EFI/fedora/grub.cfg`. If you’re not sure where it is on your system, there’s usually a symlink to it from within the `/etc` directory. Run the following command with the correct location:
+
+```shell
+grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+
+At system boot, the menu can be accessed by pressing `<Esc>`. You can give yourself more time to do this by setting `GRUB_HIDDEN_TIMEOUT` to a higher value (in seconds).
+
+#### Hardening GRUB
+
+Create a password for **GRUB**, be a **root** user and open command prompt, type below command. When prompted type **grub password** twice and press enter. This will return **MD5** hash password. Please copy or note it down.
+
+```shell
+ grub-md5-crypt
+```
+
+```shell
+grub-md5-crypt
+Password: 
+Retype password: 
+$1$19oD/1$NklcucLPshZVoo5LvUYEp1
+```
+
+Now you need to open the **/boot/grub/menu.lst** or **/boot/grub/grub.conf** file and add the **MD5** password. Both files are same and symbolic link to each other.
+
+```shel
+vi /boot/grub/menu.lst
+OR
+vi /boot/grub/grub.conf
+```
+
+Add the newly created **MD5 password** in **GRUB** configuration file. Please paste copied password below timeout line and save it and exit. For example, Enter the line **password –md5**
+
+```shell
+# grub.conf generated by anaconda
+#
+# Note that you do not have to rerun grub after making changes to this file
+# NOTICE:  You have a /boot partition.  This means that
+#          all kernel and initrd paths are relative to /boot/, eg.
+#          root (hd0,0)
+#          kernel /vmlinuz-version ro root=/dev/sda3
+#          initrd /initrd-[generic-]version.img
+#boot=/dev/sda
+default=0
+timeout=5
+password --md5 $1$TNUb/1$TwroGJn4eCd4xsYeGiBYq.
+splashimage=(hd0,0)/grub/splash.xpm.gz
+hiddenmenu
+title CentOS (2.6.32-279.5.2.el6.i686)
+root (hd0,0)
+kernel /vmlinuz-2.6.32-279.5.2.el6.i686 ro root=UUID=d06b9517-8bb3-44db-b8c5-7710e183edb7 rd_NO_LUKS rd_NO_LVM rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYBOARDTYPE=pc KEYTABLE=us crashkernel=auto rhgb quiet
+initrd /initramfs-2.6.32-279.5.2.el6.i686.img
+title centos (2.6.32-71.el6.i686)
+root (hd0,0)
+kernel /vmlinuz-2.6.32-71.el6.i686 ro root=UUID=d06b9517-8bb3-44db-b8c5-7710e183edb7 rd_NO_LUKS rd_NO_LVM rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYBOARDTYPE=pc KEYTABLE=us crashkernel=auto rhgb quiet
+initrd /initramfs-2.6.32-71.el6.i686.img
+```
+
+ Reboot system and try it pressing ‘**p**‘ to enter password to unlock and enable next features.
+
+#### Disable Remote Root Access
+
+In Linux the root user has full unrestricted access to the system, by disabling logging in directly as the root user we can improve security as attackers typically attempt to compromise the root account. This can be done by editing the `/etc/passwd` file and changing the root shell from `/bin/bash` to `/sbin/nologin`
+
+Default /etc/passwd for root
+
+```Shell
+root:x:0:0:root:/root:/bin/bash
+```
+
+After disabling root login
+
+```Shell
+root:x:0:0:root:/root:/sbin/nologin
+```
+
+This will prevent root access through the GUI, SSH, SCP, SFTP and with su. It will not disable sudo or console access however.
+
+Services can also be explicitly configured to disallow root login. Remote access through SSH for instance can be disabled for the root user by modifying the `/etc/ssh/sshd_config` file as below. After editing the file, restart the service to apply the change.
+
+```shell
+PermitRootLogin no
+```
+
+Root privileges can be delegated out to other user accounts as required. As a best practice you do not want to provide the root password to multiple users as it makes auditing and tracking who is doing what with the account more difficult. To provide root access to other users, the user account can be added to the sudoers file which will grant them root privileges. This file can be modified with the ‘visudo’ command.
+
+```shell
+visudo
+...
+root    ALL=(ALL)       ALL
+bob     ALL=(ALL)       ALL
+...
+```
+
+The root account will be there by default, other accounts can also be specified. In this instance the ‘bob’ account has been added to also have full sudo privileges and can run all commands as root by prefixing them with ‘sudo’ and correctly entering their password.
+
+#### Limit SSH Access
+
+By default any user that you create on a Linux server with the default `/bin/bash` shell is capable of logging in remotely by SSH once it has had a password set. SSH access can be restricted to a defined set of users or groups by using **AllowUsers** or **AllowGroups** in `/etc/ssh/sshd_config` respectively. Not all users on a server will typically need SSH access so this can be restricted to only those that need access to manage the server.
+
+For example, the below configuration in `/etc/ssh/sshd_config` will only allow users root and bob SSH access, any other user will be denied access when they attempt to login via SSH.
+
+```shell
+AllowUsers root bob
+```
+
+Users that share a common attribute can be grouped together and allowed instead with **AllowGroups** which is more scalable with a larger number of users. Be sure to restart the sshd service to apply any changes made here.
+
+#### Enforce Strong Passwords
+
+By enforcing strong passwords we can improve the security of an account as brute force attack becomes more difficult, stronger passwords require more time and computing power to discover. This is generally done through policy on the directory server where the accounts exist, but can also be configured locally on a per server basis. In CentOS 7 strong passwords are enforced by the pwquality PAM module rather than the cracklib module, however both use the same back end.
+
+[pwquality](http://linux.die.net/man/5/pwquality.conf) checks the strength of a password against a set of rules, first it checks if the password is a dictionary word and then if not it checks the custom set of rules defined within `/etc/security/pwquality.conf`.
+
+To enable the pwquality module add the following line into the `/etc/pam.d/passwd` file.
+
+```shell
+password    required    pam_pwquality.so retry=3
+```
+
+The `/etc/security/pwquality.conf` file is then used to configure the checks such as minimum length, this file documents all available variables well, below is an example configuration.
+
+```shell
+minlen = 8 
+minclass = 4
+maxsequence = 3 
+maxrepeat = 3
+```
+
+In this case the minimum acceptable size for the new password is length 8, the minimum number of required classes of characters is 4 (digits, uppercase, lowercase, and symbols), the maximum sequence is 3 (such as abc or 123), and the maximum number of allowed consecutive same characters is 3 (such as aaa or 111)
+
+#### Lock and Unlock Account Manually
+
+The lock and unlock features are very useful, instead of removing an account from the system, you can lock it for an week or a month. To lock a specific user, you can use the follow command.
+
+```shell
+passwd -l accountName
+```
+
+The locked user is still available for **root** user only. The locking is performed by replacing encrypted password with an (**!**) string. If someone trying to access the system using this account, he will get an error similar to below.
+
+```shell
+su - accountName
+This account is currently not available.
+```
+
+To unlock or enable access to an locked account, use the command as. This will remove (**!**) string with encrypted password.
+
+```shell
+passwd -u accountName
+```
+
+
+
+### IPTABLES
+
+## IPtables
+
+IPtables es un sistema de firewall vinculado al kernel de linux que se ha extendido enormemente a partir del Kernel 2.4.
+
+Permite no solamente filtrar paquetes, sino también realizar traducción de direcciones de red (NAT) o mantener registros de log.
+
+Existen cinco tablas en IPtables, que son zonas en las que una cadena de reglas se puede aplicar:
+
+- RAW: filtra los paquetes antes que cualquier otra tabla
+- FILTER: es la tabla por defecto. Reglas de INPUT, OUTPUT, FORWARD.
+- NAT: se utiliza para la traducción de dirección de red. Reglas de PREROUTING y POSTROUTING (No se debe de hacer el filtrado aquí)
+- MANGLE: se utilizan para la alteración de los paquetes de red especializados.
+- SECURITY: se utiliza para reglas de conexión de red Mandatory Access Control
+
+## IPtables
+
+```
+#INSPECCIONAR EL FIREWALL
+#Mostrar el estado del firewall
+iptables -L -n -v
+#Mostrar el estado de firewall con número de línea
+iptables -n -L -v --line-numbers
+#Mostrar las reglas de cadena de entrada y salida
+iptables -L INPUT -n -v
+iptables -L OUTPUT -n -v --line-numbers
+```
+
+-L : muestra las reglas
+-v : verbose (información detallada)
+-n : muestra la IP y puerto en formato númerico
+
+## IPtables
+
+```
+#PARAR | INICIAR | REINICIAR FIREWALL
+#Iniciar el servicio
+systemctl start iptables
+#Detener el servicio 
+systemctl stop iptables
+#Reiniciar el servicio
+systemctl restart iptables
+```
+
+## IPtables
+
+```
+#FLUSH DE REGLAS
+#Delete all rules in a chain or all chains
+iptables -F
+#Delete a user-defined chain
+iptables -X
+#Delete all rules in specific table
+iptables -t [table] -F
+```
+
+-F : Borra todas las reglas
+-X : Borra todas las cadenas
+-t : selecciona una tabla en específico
+
+## IPtables
+
+```
+#ADMIN IPTABLES RULES
+#Show existent rules
+iptables -L [INPUT|OUTPUT] -n --line-numbers
+#Insert a new rule
+iptables -I INPUT [rulenum] -s X.X.X.X -j DROP
+#Delete a rule by line number
+iptables -D INPUT [rulenum]
+#Delete a rule by origin
+iptables -D INPUT -s X.X.X.X -j DROP
+#Save rules
+iptables-save > /etc/sysconfig/iptables
+ip6tables-save > /etc/sysconfig/ip6tables
+#Restore rules from a file
+iptables-restore < /path/to/your/file
+```
+
+-I : Insert in chain (could be as rulenum)
+-D : Delete matching chain or rulenum
+-s : Source, ip address
+-j : Target for rule
+
+## IPtables
+
+```
+#BLOCK IP addresses
+iptables -A [INPUT|OUTPUT] -s X.X.X.X -j DROP
+iptables -A [INPUT|OUTPUT] -s X.X.X.X/24 -j DROP #For ip ranges
+#BLOCK ports
+iptables -A [INPUT|OUTPUT] -p [protocol] --dport X -j DROP
+iptables -A [INPUT|OUTPUT] -i eth1 -p tcp --dport 80 -j DROP 
+#ALLOW or DENY traffic from MAC addresses
+iptables -A [INPUT|OUTPUT] -m mac --mac-source AA:BB:CC:DD -j DROP
+#OPEN a port range
+iptables -A [INPUT|OUTPUT] -m state --state NEW -m tcp --dport 7000:7010 -j ACCEPT
+#OPEN a ip address range
+iptables -A [INPUT|OUTPUT] -p tcp --d-port 80 -m iprange --src-range X.X.X.X-X.X.Y.Y -j ACCEPT
+```
+
+### FIREWALLD
+
+## Firewalld
+
+Se trata de un cortafuegos dinámico con soporte para IPv4, IPv6 y puentes de red, que nos permite definir en las interfaces de red ciertas zonas de confianza, aparte de las tradicionales reglas de reenvío, denegración, enmascaramiento, etc...
+
+Al ser dinámico podremos cargar nuevas reglas o modificar las existentes sin necesidad de reinicar el servicio de cortafuegos. También se puede crear reglas de forma sencilla, basta con seleccionar.
+
+La desventaja es que nos obliga a tener que utilizar excllusivamente firewalld,  ya que éste no permite la modificación de reglas mediante los tradicionales comandos iptables. Aunque es nuestra decisión el activar el tradicional iptables o firewalld pero nunca los dos de forma simultánea.
+
+## Firewalld
+
+```
+#Ver el status del firewall
+firewall-cmd --state
+#Ver la zona default actual
+firewall-cmd --get-default-zone
+#Ver la interfaz ethernet en uso actual
+firewall-cmd --get-active-zones
+#Ver todas las zonas disponibles
+firewall-cmd --get-zones
+#Recargar el servicio
+firewall-cmd --reload
+```
+
+## Firewalld
+
+```
+#ZONAS
+Block: Se rechaza cualquier conexión de entrada emitiendo una respuesta ICMP avisando al origen de la denegación de la conexión.
+Drop: Se deniega cualquier conexión de entrada sin emitir paquete que informe del rechazo.
+DMZ: Zona desmilitarizada. Solo serán aceptadas aquellas conexiones preseleccionadas. Una especie de acceso público pero en el que se acaba limitando las conexiones.
+External: Redes externas con enmascaramiento habilitado. Solo las conexiones de entrada preseleccionada podrán accesar.
+Internal: Redes internas (privadas)
+Home: Área del hogar. Conocido por el mundo MS Windows.
+Work: Área de trabajo
+Public: Redes públicas. Las conexiones no son de confianza.
+Trusted: Toda conexión es aceptada
+```
+
+## Firewalld
+
+```
+#Cambiar la zona por defecto
+firewall-cmd --set-default-zone=work
+#Crear una regla permanente
+firewall-cmd --permanent --zone=internal --change-interface=eth0
+#Listar la configuración de una zona
+firewall-cmd --zone=[zone] --list-all
+#Crear una zona propia
+firewall-cmd --permanent --new-zone=secureme
+#Crear una regla de conexión
+firewall-cmd --permanent --zone=secureme --add-service=samba
+#Desactivar una regla de conexión
+firewall-cmd --zone=secureme --remove-service=http
+#Permitir el tráfico por puerto
+firewall-cmd --zone=internal --add-port=[portno]/[port]
+#Listar puertos
+firewall-cmd --zone=secureme --list-ports
+#Listar servicios
+firewall-cmd --zone=secureme --list-services
+```
+
+
+
+### User monitoring
+
+#### top
+
+Linux **Top** command is a performance monitoring program which is used frequently by many system administrators to monitor Linux performance and it is available under many **Linux/Unix** like operating systems. The top command used to dipslay all the running and active real-time processes in ordered list and updates it regularly. It display **CPU usage**, **Memory usage**, **Swap Memory**, **Cache Size**, **Buffer Size**, **Process PID**, **User**, **Command**s and much more. It also shows high **memory** and **cpu** utilization of a running processess. The top command is much userful for system administrator to monitor and take correct action when required.
+
+```shell
+top
+```
+
+
+
+![top](img/top.png)
+
+#### htop
+
+**Htop** is a much advanced interactive and real time Linux process monitoring tool. This is much similar to Linux **top command** but it has some rich features like **user friendly interface to manage process**, **shortcut keys**, **vertical and horizontal view of the processes** and much more.
+
+```shell
+htop
+```
+
+
+
+![htop](img/htop.png))
+
+
+
+#### iotop
+
+iotop command displays columns for the I/O bandwidth read and written by each process/thread during the sampling period. It also displays the percentage of time the thread/process spent while swapping in and while waiting on I/O. For each process, its I/O priority (class/level) is shown. In addition, the total I/O bandwidth read and written during the sampling period is displayed at the top of the interface.
+
+```Shell
+iotop
+```
+
+
+
+![iotop](img/iotop.png)
+
+#### logs
+
+**/var/log/messages** Contains global system messages, including the messages that are logged during system startup. 
+
+**/var/log/dmesg** Contains kernel ring buffer information. When the system boots up, it prints number of messages on the screen that displays information about the hardware devices that the kernel detects during boot process.
+
+**/var/log/auth.log** Contains system authorization information, including user logins and authentication machinsm that were used.
+
+**/var/log/boot.log** Contains information that are logged when the system boots
+
+**/var/log/daemon.log** Contains information logged by the various background daemons that runs on the system
+
+**/var/log/maillog /var/log/mail.log**  Contains the log information from the mail server that is running on the system
+
+**/var/log/user.log** Contains information about all user level logs
+
+**/var/log/yum.log** Contains information that are logged when a package is installed using yum
+

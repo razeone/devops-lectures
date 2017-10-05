@@ -2162,3 +2162,162 @@ systemctl list-units --type service --all
 ```
 
 ## Conceptos y mongodb
+
+
+
+
+#Subnetting
+
+**IP Address**
+
+An IP address identifies as single device within a network,
+this is useful when delivering or providing content.
+
+In the IPv4 this address is defined by a 32bit number which is
+divided in groups of 8 for readability, for example:
+
+`00000001.00000001.00000001.00000001`   32 bits
+
+`1.1.1.1`                               decimal representation
+
+To provide a scheme that supports large and small networks,
+these addresses are classified in 5 major classes using their
+most significant bits:
+
+
+![IPClasses](img/classes.gif)
+
+**Network Mask**
+
+A network mask is used to identify which part of an address identifies the network and
+which identifies the device.
+Classes A,B and C have their natural masks:
+
+Class A: `255.0.0.0`
+
+Class B: `255.255.0.0`
+
+Class C: `255.255.255.0`
+
+To find the network address use their binary representations,
+for example:
+
+`8.20.15.1 = 00001000.00010100.00001111.00000001`
+
+`255.0.0.0 = 11111111.00000000.00000000.00000000`
+
+The address numbers matching all-ones in its mask, describe the network ID
+
+The address numbers matching all-zeros in its mas, describe the device ID
+
+`netid =  00001000 = 8`
+
+`hostid = 00010100.00001111.00000001 = 20.15.1`
+
+
+**Subnetting**
+
+A subnet is a network allocated within a network and provides
+ isolation, order and coherence within a network. This is useful
+ for security reasons and also to describe business logic.
+
+To create subnet we increase the ones in a mask by taking bits from the
+device segment in a IP address:
+
+
+`204.17.5.0 -      11001100.00010001.00000101.00000000`
+
+`255.255.255.224 - 11111111.11111111.11111111.11100000`
+
+`-----------------------------net------------|sub|---- `
+
+This will enable the creation of multiple subnets with a their
+device addresses (the first and last are not available)
+
+`204.17.5.0 255.255.255.224     host address range 1 to 30`
+
+`204.17.5.32 255.255.255.224    host address range 33 to 62`
+
+`204.17.5.64 255.255.255.224    host address range 65 to 94`
+
+`204.17.5.96 255.255.255.224    host address range 97 to 126`
+
+`204.17.5.128 255.255.255.224   host address range 129 to 158`
+
+`204.17.5.160 255.255.255.224   host address range 161 to 190`
+
+`204.17.5.192 255.255.255.224   host address range 193 to 222`
+
+`204.17.5.224 255.255.255.224   host address range 225 to 254`
+
+
+
+**Notation**
+
+There is two options to describe a network with its mask:
+
+The first one `204.17.5.32 255.255.255.224` by writing address and mask
+
+The second one `204.17.5.32/27` by writing address slash and the number of
+ones in the mask, this is called CIDR notation.
+
+
+**VLSM**
+
+When applying the same subnetwork mask to all new subnets all of them
+will have the same number of address this yields a waste lots
+of host addresses as not all subnets will have the same number of devices
+
+Given the network 204.15.5.0/24 suppose the next requirements are given
+
+`netA: must support 14 hosts`
+
+`netB: must support 28 hosts`
+
+`netC: must support 2 hosts`
+
+`netD: must support 7 hosts`
+
+`netE: must support 28 host`
+
+Determine the appropriate mask
+
+`netA: requires a /28 (255.255.255.240) mask to support 14 hosts`
+
+`netB: requires a /27 (255.255.255.224) mask to support 28 hosts`
+
+`netC: requires a /30 (255.255.255.252) mask to support 2 hosts`
+
+`netD: requires a /28 (255.255.255.240) mask to support 7 hosts`
+
+`netE: requires a /27 (255.255.255.224) mask to support 28 hosts`
+
+
+First assign the biggest subnet
+
+`netB: 204.15.5.0/27  host address range 1 to 30`
+
+`netE: 204.15.5.32/27 host address range 33 to 62`
+
+`netA: 204.15.5.64/28 host address range 65 to 78`
+
+`netD: 204.15.5.80/28 host address range 81 to 94`
+
+`netC: 204.15.5.96/30 host address range 97 to 98`
+
+This yields to a better usage and allow future usage for the remaining
+addresses
+
+
+**Classless Inter-Domain Routing**
+
+CIDR, lefts behind the idea of having A,B,C... IP types,
+by using the slash representation IP/XX  a new approach of hierarchy
+where each domain gets their IPs from a higher level, then higher levels can
+group or abstract its descendants into a single address.
+
+For example: An IPS holds the network `172.16.0.0/16` and servers their clientes
+using subnets `172.16.1.0/24, 172.16.2.0/24` ans so on. But when it comes to
+direct content to external networks, it can advertise using a single address
+`172.16.0.0/16` without disrupting its whole infrastructure.
+

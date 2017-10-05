@@ -2162,3 +2162,57 @@ systemctl list-units --type service --all
 ```
 
 ## Conceptos y mongodb
+
+## NAT
+
+Network address translation (NAT) is a method of remapping one IP address space into another by modifying network address information in Internet Protocol (IP) datagram packet headers while they are in transit across a traffic routing device. The technique was originally used for ease of rerouting traffic in IP networks without readdressing every host. In more advanced NAT implementations featuring IP masquerading, it has become a popular and essential tool in conserving global address space allocations in face of IPv4 address exhaustion by sharing one Internet-routable IP address of a NAT gateway for an entire private network.
+
+```
+# Display NAT rules
+iptables -t nat -L -n
+
+#Enable bit forward
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# Source NAT 
+iptables -t nat -A POSTROUTING -s 192.168.3.0/24 -o eth0 -j MASQUERADE
+```
+
+## Route Maps
+
+Route command is used to show/manipulate the IP routing table. It is primarily used to setup static routes to specific host or networks via an interface.
+
+
+```
+# Display routes
+route
+
+# Reject Routing to a Particular Host or Network
+route add -host 192.168.1.51 reject
+route add -net 192.168.1.0 netmask 255.255.255.0 reject
+
+# Route privates newtworks
+#Set default gateway
+route add default gw 192.168.1.10
+
+#In gateway apply
+route add -net 192.168.3.0 netmask 255.255.255.0 gw 192.168.3.10
+```
+
+## Tracing
+
+The traceroute command shows how a data transmission travelled from a local machine to a remote one. A typical example would be loading a web page. Loading a web page over the internet involves data flowing through a network and a number of routers. The traceroute command can show the route taken and the IP and hostnames of routers on the network. It can be useful for understanding latency or diagnosing network issues.
+
+```
+# Trace to domain
+traceroute google.com
+
+# Trace packet IPv6 to domain
+traceroute -6 ipv6.google.com
+
+# Number of packets per hop
+traceroute -q 1 google.com
+
+# Trace with specify the interface
+traceroute -i wlp3s0b1 google.com
+```

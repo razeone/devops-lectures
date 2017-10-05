@@ -2163,13 +2163,13 @@ systemctl list-units --type service --all
 
 ## Conceptos y mongodb
 
-## Samba
+# Samba
 
 Samba son un conjunto de aplicaciones para Linux, que implementan el protocolo de comunicación SMB utilizado por los sistemas operativos Microsoft Windows para compartir carpetas e impresoras.
 
 Básicamente samba permite a PCs que utilizan Linux, conectarse a carpetas compartidas en PCs con Windows.
 
-# Instalación de samba
+## Instalación de samba
 Samba se compone de varios paquetes. Se pueden localizar en http://packages.ubuntu.com buscando 'samba'. Destacamos los más importantes:
 
     - samba 		Servidor de archivos e impresoras tipo LanManager para Unix.
@@ -2184,7 +2184,7 @@ Samba se compone de varios paquetes. Se pueden localizar en http://packages.ubun
     # sudo apt-get install samba samba-common smbclient samba-doc smbfs
 ```
 
-#Configuración de samba
+## Configuración de samba
 El archivo de configuración se divide en secciones identificadas por un nombre entre corchetes. Hay tres secciones especiales que son 
 - [global]
 - [homes]
@@ -2228,7 +2228,7 @@ El archivo de configuración se divide en secciones identificadas por un nombre 
   directory = /tmp   -- Especifica donde se guardan los archivos temporales de impresión. 
 ```
 
-# Para unir al dominio PCs con Windows 2000 ó Windows XP
+## Para unir al dominio PCs con Windows 2000 ó Windows XP
 Es necesario previamente crear en el servidor samba una cuenta de usuario para el equipo a unir. 
 
 ```
